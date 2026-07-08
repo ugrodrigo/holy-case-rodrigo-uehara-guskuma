@@ -4,7 +4,7 @@ Systematic audit of `orders.csv`, `order_items.csv`, `products.csv` and `shipmen
 Every issue below was verified with code; numbers are exact counts from the files as delivered.
 Issues are grouped by severity, and each one ends with the **question I would ask the interviewer / data owner**.
 
-> **Reproducibility:** every check runs in **[analysis.ipynb](analysis.ipynb)** — the `(code §…)` tag on each issue names the notebook section that produces the exact counts quoted.
+> **Reproducibility:** every check runs in **analysis.ipynb** (in the repository, rendered with outputs on GitHub) — the *(code: analysis.ipynb §…)* tag on each issue names the analysis.ipynb section that produces the exact counts quoted.
 
 ---
 
@@ -29,22 +29,22 @@ The files do not match the schemas described in the case brief:
 
 ## 2. High-impact issues (materially affect the analysis)
 
-### 2.1 Duplicate orders — 500 duplicated `order_id`s in `orders.csv` *(code [§1.1](analysis.ipynb#sec11))*
+### 2.1 Duplicate orders — 500 duplicated `order_id`s in `orders.csv` *(code: analysis.ipynb §1.1)*
 1,000 rows carry 500 duplicated IDs. 445 pairs are *not* byte-identical — they differ slightly in `shipping_revenue` (e.g. 0.00 vs 0.03/0.05). Looks like an export dedup failure.
 **Handling:** kept the first occurrence. **Ask:** which extract is canonical, and is `shipping_revenue` reliable at all?
 
-### 2.2 200 orphan order_items (`ORD-900001`–`ORD-900200`) *(code [§1.2](analysis.ipynb#sec12))*
+### 2.2 200 orphan order_items (`ORD-900001`–`ORD-900200`) *(code: analysis.ipynb §1.2)*
 200 line items reference order IDs that don't exist in `orders.csv` — and the ID range (900k) is far outside the normal range (~345k). Looks like injected test data or a truncated orders extract.
 **Handling:** excluded. **Ask:** are these test records, or is `orders.csv` missing rows?
 
-### 2.3 No cancellation flag + re-shipment duplication in `shipments.csv` *(code [§1.4](analysis.ipynb#sec14))*
+### 2.3 No cancellation flag + re-shipment duplication in `shipments.csv` *(code: analysis.ipynb §1.4)*
 - `shipments.csv` has 366,218 rows for ~345k orders: **21,555 orders have 2–4 shipment rows** (typical pattern: shipped → cancelled → shipped again weeks later). Naively joining shipments to orders double-counts and mixes up delivery dates.
 - 1,545 orders have *only* cancelled/ignored shipment rows (my proxy for a cancelled order); 270 orders have no shipment row at all.
 
 **Handling:** used the *first delivered* shipment per order for delay analysis; flagged orders whose every shipment row is cancelled as "cancelled" and excluded them.
 **Ask:** what is the correct definition of a cancelled order? And do multiple shipment rows mean split shipments, replacements, or subscription-like repeat deliveries? (Many orders show two *successful* deliveries ~3–4 weeks apart, e.g. shipped Apr 23 and again May 18 — replacement shipments for the syrup production gap?)
 
-### 2.4 Inconsistent net/gross revenue definitions in `orders.csv` *(code [§1.1](analysis.ipynb#sec11), [§1.2](analysis.ipynb#sec12))*
+### 2.4 Inconsistent net/gross revenue definitions in `orders.csv` *(code: analysis.ipynb §1.1, §1.2)*
 - **37,098 orders (10.8%) have `net_revenue` > `gross_revenue`.** In these rows `net_revenue ≈ gross_revenue + shipping_revenue` exactly — i.e. net *includes* shipping while gross excludes it, unlike all other rows.
 - 764 orders have negative `net_revenue` with positive gross.
 - Net/gross ratios are otherwise VAT-coherent (UK ≈ 1/1.20; DE mixes 7% food / 19% standard; FR mixes 5.5% / 20%), which confirms the general logic is right but the shipping treatment is inconsistent.
@@ -52,14 +52,14 @@ The files do not match the schemas described in the case brief:
 
 **Handling:** I ran the whole analysis on **gross revenue**, which is internally consistent. **Ask:** what exactly is `net_revenue` net *of* (VAT? discounts? shipping in or out?), and why does it flip sign/definition on a subset of orders?
 
-### 2.5 5,490 order-item rows with negative `net_revenue` but positive `gross_revenue` *(code [§1.2](analysis.ipynb#sec12))*
+### 2.5 5,490 order-item rows with negative `net_revenue` but positive `gross_revenue` *(code: analysis.ipynb §1.2)*
 Including rows like gross €9.03 / net −€16.84. Possibly discount over-allocation on bundle decomposition. **Handling:** gross used throughout. **Ask:** is bundle discount allocation known to over-assign discounts to low-price components?
 
-### 2.6 `shipments.is_on_time` looks broken *(code [§1.4](analysis.ipynb#sec14))*
+### 2.6 `shipments.is_on_time` looks broken *(code: analysis.ipynb §1.4)*
 344,406 rows are `False`, only 5,647 `True` — even 1–2-day deliveries are flagged not-on-time. Also `days_to_delivery` disagrees with `delivered_at − order_date` by >1 day in 145k rows (it appears to be measured from `shipped_at`, not order date). One row has `days_to_delivery = −1`.
 **Handling:** ignored `is_on_time` and `days_to_delivery`; computed delay as `delivered_at − order_date` myself. **Ask:** what SLA does `is_on_time` encode, and from which anchor timestamp is `days_to_delivery` counted?
 
-### 2.7 13,724 order-item rows reference SKUs missing from `products.csv` *(code [§1.2](analysis.ipynb#sec12), [§1.3](analysis.ipynb#sec13))*
+### 2.7 13,724 order-item rows reference SKUs missing from `products.csv` *(code: analysis.ipynb §1.2, §1.3)*
 Top offenders:
 
 | SKU | Rows | Note |
@@ -73,7 +73,7 @@ Top offenders:
 
 **Handling:** kept the rows (they carry real revenue) but they fall out of any category-level view. **Ask:** what is `10-00-42-0020`, and should the free-text/malformed SKUs be mapped back to real products?
 
-### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code [§1.1](analysis.ipynb#sec11))*
+### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code: analysis.ipynb §1.1)*
 - 3,450 orders have **no `customer_id`** — these can never appear in reorder/retention metrics.
 - **1,583 customers have more than one order flagged `is_first_order = TRUE`.**
 - 10,137 orders are `is_first_order=TRUE` but `is_first_paid_order=FALSE` (plausible if the first order was free), yet 1,211 are the reverse — `is_first_order=FALSE` but `is_first_paid_order=TRUE` *and* that combination is hard to explain if flags are computed consistently.
@@ -82,7 +82,7 @@ Top offenders:
 
 ---
 
-## 3. Anomalies that look like business events, not errors (need context) *(code [§1.5](analysis.ipynb#sec15))*
+## 3. Anomalies that look like business events, not errors (need context) *(code: analysis.ipynb §1.5)*
 
 These change how the campaign windows should be read — I'd validate my reading with the team:
 
@@ -110,7 +110,7 @@ These change how the campaign windows should be read — I'd validate my reading
 
 ---
 
-## 5. Cleaning rules applied in my analysis *(code [§2](analysis.ipynb#sec2))*
+## 5. Cleaning rules applied in my analysis *(code: analysis.ipynb §2)*
 
 | Rule | Rows affected |
 |---|---|

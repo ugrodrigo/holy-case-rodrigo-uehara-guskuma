@@ -2,11 +2,11 @@
 
 *Inputs: MMM v5.3.1 memo (Section A) + DE attribution data Mar–May 2026 (Section B). Constraints: €35M total · €4M brand (fixed) · €800K TV locked in Q3 · €31M flexible performance budget.*
 
-> **Code:** the memo PDF extraction, its tables transcribed as data, and every derived number in this document are in **[analysis.ipynb](analysis.ipynb) §5** — PDF extraction [§5.1](analysis.ipynb#sec51), memo tables [§5.2](analysis.ipynb#sec52), derived analysis & MMM-vs-attribution conflicts [§5.3](analysis.ipynb#sec53), allocation checksums [§5.4](analysis.ipynb#sec54).
+> **Code:** the memo PDF extraction, its tables transcribed as data, and every derived number in this document are in **analysis.ipynb §5** — PDF extraction in §5.1, the memo tables in §5.2, derived analysis & MMM-vs-attribution conflicts in §5.3, allocation checksums in §5.4.
 
 ---
 
-## 0. The elephant in the room (read this first) *(code [§5.3](analysis.ipynb#sec53))*
+## 0. The elephant in the room (read this first) *(code: analysis.ipynb §5.3)*
 
 The MMM team's own optimised plan spends **€16.1M** in H2 — the task asks me to allocate **€35M**, i.e. **2.2× the model-optimal level** and ~1.8× the H1 run-rate (~€19.3M/half). The MMM says META's marginal ROI is already ~0.99 at *current* spend and TikTok's drops to 0.63 at just +50% spend. **At €31M of performance spend, the marginal euros are, per the model, value-destructive.**
 
@@ -25,7 +25,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 5. **Hold a testing & flex reserve** — with model holdout R² of 0.29, buying information is worth more than the last saturated media euro. The reserve deploys in Q4 into whatever the Q3 tests validate.
 6. **Phase Q3 < Q4** (≈ 40/60): H2 contains Black Week + Christmas; saturation ceilings are higher when demand is elevated.
 
-### 1.2 Channel-by-channel plan (H2 totals) *(code [§5.4](analysis.ipynb#sec54))*
+### 1.2 Channel-by-channel plan (H2 totals) *(code: analysis.ipynb §5.4)*
 
 | Channel | H1 actual (≈26wk) | **H2 plan** | vs H1 | Logic |
 |---|---|---|---|---|
@@ -38,7 +38,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 | **Brand (fixed)** | €5.8M | **€4.0M** | −31% | See split below |
 | **TOTAL** | ~€19.3M | **€35.0M** | +81% | |
 
-### 1.3 Brand envelope (€4.0M) *(code [§5.4](analysis.ipynb#sec54))*
+### 1.3 Brand envelope (€4.0M) *(code: analysis.ipynb §5.4)*
 
 Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window *understates* brand (so I don't zero-out anything structural):
 
@@ -53,7 +53,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 | Performance Awareness | 0.43 | €0.15M | Near-exit; keep a measurement stub |
 | **Total** | | **€4.00M** | |
 
-### 1.4 Quarterly phasing *(code [§5.4](analysis.ipynb#sec54))*
+### 1.4 Quarterly phasing *(code: analysis.ipynb §5.4)*
 
 | | Q3 | Q4 | Rationale |
 |---|---|---|---|
@@ -98,7 +98,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 | H1 run-rates from the memo (§5.2) are accurate actuals | High |
 | Brand's true ROI exceeds the measured 1.04× (8-week window) | Medium-high — standard MMM limitation, memo agrees |
 
-### 3.2 Unclear or unusual data points, and how I handled them *(code [§5.3](analysis.ipynb#sec53))*
+### 3.2 Unclear or unusual data points, and how I handled them *(code: analysis.ipynb §5.3)*
 
 1. **The memo optimises €16.1M while the task hands me €35M.** The single most important inconsistency — the "recommendation" I was given as primary input argues against my budget. Handled by treating €35M as a constraint, phasing toward Q4, and reserving budget for measurement (see §0).
 2. **YouTube Paid Social: iROAS 37×, mROI "20 (capped)" on €0.07M spend (0.5% of PS).** A €2.82M contribution from €70K spend is not credible; the model itself caps it and flags LOW confidence. Handled: treated as "promising, unproven"; staged test allocation only.

@@ -13,7 +13,7 @@
 | **[q1-campaign-analysis.md](q1-campaign-analysis.md)** | Question 1 — Syrup Campaign analysis, written as a briefing for the Head of Marketing (KPIs, uplift, adoption, delays, retention, cannibalisation, recommendations) |
 | **[q2-h2-budget-plan.md](q2-h2-budget-plan.md)** | Question 2 — €35M H2 budget allocation, incrementality testing roadmap, and strategic reflection on the MMM memo + attribution data |
 | **[charts/](charts/)** | Four PNG charts referenced by the Q1 write-up |
-| **[analysis.ipynb](analysis.ipynb)** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
+| **analysis.ipynb** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
 
 ---
 
@@ -52,14 +52,14 @@ Analysis blocks executed: baseline & uplift (total, per market, excl. launch day
 Four charts, built per the dataviz method (form chosen by the data's job, single-hue palette since every chart encodes one measure, direct labels, annotated events): daily revenue with campaign window shaded · daily bottle units (full + zoomed small-multiple, because the launch spike is 20× the baseline) · market adoption bars · **delay-vs-reorder bars (the money chart)**.
 
 ### Phase 4 — Question 2 (desk analysis of the memo)
-1. Extracted the memo PDF with `pypdf` and transcribed every table into DataFrames (L1/L2 iROAS & mROI, H1 run-rates, constraints, attribution) — notebook §5.1–5.2.
+1. Extracted the memo PDF with `pypdf` and transcribed every table into DataFrames (L1/L2 iROAS & mROI, H1 run-rates, constraints, attribution) — analysis.ipynb §5.1–5.2.
 2. Identified the central tension: the task's **€35M** vs the MMM's own optimal **€16.1M** — made this the opening argument rather than hiding it.
 3. Built the allocation from mROI ranking + saturation caveats + contract floors, with a testing reserve and Q3/Q4 phasing.
 4. Designed the testing roadmap around the three biggest MMM-vs-attribution conflicts (Influencer, Google/Affiliate, TikTok/META), with sequencing and a Black-Week test freeze.
 5. Wrote the strategic reflection: assumptions with confidence levels, 9 flagged data oddities and how each was handled, 10 missing-context asks.
 
 ### Phase 5 — Further analyses (beyond the brief)
-Seven additional analyses (notebook §6, write-up §5 of the Q1 briefing): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
+Seven additional analyses (analysis.ipynb §6, write-up §5 of the Q1 briefing): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
 
 ### Phase 6 — Write-ups
 Each deliverable written for its audience: Q1 as a marketing-leadership briefing (findings first, method in footnotes), Q2 as a planning document (logic per line item), data review as an engineering-style audit (issue → evidence → handling → question).
@@ -71,7 +71,7 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 - **Audit before analysis** — every headline number sits on the cleaning rules from Phase 1, and those rules are documented and reversible.
 - **Data vs. interpretation kept separate** — write-ups label "what the data shows" vs. "my hypothesis" (per the case's explicit requirement).
 - **Relative numbers over absolutes** — per the dataset disclaimer, all conclusions are ratios, shares and deltas.
-- **Reproducibility** — everything numeric comes from [analysis.ipynb](analysis.ipynb) (no spreadsheet hand-edits); the write-ups cite notebook sections (`code §…`) so any figure can be regenerated or challenged.
+- **Reproducibility** — everything numeric comes from analysis.ipynb (no spreadsheet hand-edits); the write-ups cite its sections (`code: analysis.ipynb §…`) so any figure can be regenerated or challenged.
 - **Say the uncomfortable thing** — the Q2 answer leads with the budget being ~2× model-optimal; the Q1 answer quantifies what the production gap cost in retention.
 
 ## 4. Known limitations of this work
