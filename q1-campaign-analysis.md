@@ -13,7 +13,7 @@
 1. **The launch worked as a demand event.** Campaign revenue ran at **+124% per day vs. the pre-period** (+60% excluding launch day). Launch day alone did ~€3.4M — 6× a normal day — and half of all campaign bottle volume.
 2. **It was an existing-customer launch, not an acquisition launch.** Only **22.9%** of syrup-bottle orders came from first-time customers vs. 47.9% for non-syrup orders in the same window. The syrup bottle monetized the base; it did not (yet) bring new people in.
 3. **DE carried it**: 74% of bottle units, 56.8% of DE campaign orders contained a bottle (FR 30.3%, UK 22.3%). FR underperformed its size (+55% revenue uplift vs. DE +191%).
-4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops monotonically with delay: **14.5% (delivered ≤4 days) → 5.4% (>14 days)**. Roughly **2,400 reorders (~4.5pp of retention) were likely lost** to late delivery.
+4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops with delay: **14.5% (delivered ≤4 days) → 5.4% (>14 days)** raw; after correcting for calendar truncation the causal penalty is **~25% lower reorder likelihood, ≈1,000 lost reorders** (§5.6). It was also a **single-warehouse (POZ1) problem** — NOT1 shipped bottles on time throughout (§5.4).
 5. **Early retention is real but shallow:** 10.1% of identifiable campaign bottle buyers re-bought syrup within ~4 weeks (median 23 days to reorder), mostly via the May 12 3er pod bundles — evidence the refill model works. No cannibalisation of the core Energy business is visible.
 
 ---
@@ -125,8 +125,8 @@ By order week, bottle orders placed in **weeks 18–19 (Apr 27 – May 10) waite
 
 ![Delay vs reorder](charts/delay_vs_reorder.png)
 
-Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, late delivery cost roughly **2,400 reorder customers (~4.5pp of cohort retention — i.e. retention could have been ~14.5% instead of 10.1%)**.
-*Caveat (interpretation):* delay correlates with order date, so late orderers also had less time to reorder before May 31 — the true causal effect is somewhat smaller; the gradient within same-week orderers still supports a real effect.
+Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, the naive estimate is **~2,400 lost reorder customers (~4.5pp of cohort retention)**.
+*Correction (see §5.6):* part of this gradient is calendar truncation — late-delivered customers had fewer days left to reorder before the data ends. A fixed 21-day-after-delivery window puts the **causal penalty at ~25% lower reorder likelihood, ≈1,000 lost reorders**. Still material, about half the naive read.
 
 ---
 
@@ -155,7 +155,7 @@ Of **53,738 identifiable campaign bottle buyers**:
 **Worked:** launch-day activation of the base (28% of campaign volume in one day); bundle architecture (100% pods attach = every bottle owner starts the refill loop); the May 12 3er bundle timed to the refill cycle; a durable post-campaign syrup baseline (~14% of revenue).
 
 **Needs improvement:**
-1. **Fulfilment readiness** — the production gap measurably burned ~4–5pp of early retention; late-campaign buyers had a first experience of waiting 5+ weeks.
+1. **Fulfilment readiness** — the production gap measurably burned early retention (~1,000 reorders on the corrected estimate, §5.6) and it was POZ1-specific (§5.4); late-campaign buyers had a first experience of waiting 5+ weeks.
 2. **FR performance** — 55% uplift vs DE's 191%; diagnose localisation/creator mix before H2.
 3. **New-customer angle** — syrup didn't acquire; consider a syrup-led acquisition offer now that the base is saturated with bottles.
 
@@ -168,4 +168,31 @@ Of **53,738 identifiable campaign bottle buyers**:
 
 ---
 
-*Time spent: ~3.5 hours end-to-end (data audit, analysis, charts, write-up), with the analysis fully scripted in Python/pandas for reproducibility.*
+## 5. Further analysis — beyond the brief's guiding questions
+
+Seven analyses the case didn't ask for but that sharpen — and in one case honestly **revise** — the findings above.
+
+### 5.1 Refunds & cancellations *(code [§6.1](analysis.ipynb#sec61))*
+Refund incidence is tiny (~0.4% of campaign orders) and does **not** rise with delivery delay; cancellations are 2.7× higher for bottle orders (0.9% vs 0.3%) but still small. **The production gap's cost was retention, not immediate revenue give-back** — no product-quality red flag in refunds for a first-ever product.
+
+### 5.2 The May 18 sampling giveaway barely converted *(code [§6.2](analysis.ipynb#sec62))*
+The 5.4k new customers who received free samples on May 18 converted to a **paid order within 13 days at just 0.37%**, vs **4.8%** repeat-paid for organically acquired new customers in a matched window — ~13× worse. Short-term, the giveaway generated traffic, not customers. *(Caveat: 13 days is short; the leads may still monetise via CRM.)*
+
+### 5.3 Campaign-acquired new customers are weaker, not stronger *(code [§6.3](analysis.ipynb#sec63))*
+Fixed 21-day repeat window: campaign new customers **with** a bottle repeat at **4.5%**, vs 8.5% for campaign new customers without one and 9.3% for pre-period new customers. Even accounting for the ~23-day syrup refill cycle and the delivery delays, this further weakens syrup as an acquisition tool: it pulled few new customers (§2.2) and the ones it pulled repeat less — consistent with hype/gift buyers.
+
+### 5.4 The production gap was a single-warehouse problem *(code [§6.4](analysis.ipynb#sec64))*
+Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix (and consider cross-shipping from NOT1 during launches).
+
+### 5.5 The launch re-activated dormant customers — and they stayed active *(code [§6.5](analysis.ipynb#sec65))*
+Existing customers who bought a bottle nearly **doubled their total spend/day post-campaign (+88%)** while the matched control group *declined* (−5%). Notably, the bottle cohort was **less active pre-campaign** despite being larger — the launch pulled dormant fans back, and they kept ordering. *(Interpretation caveat: part of the lift is syrup refills themselves plus regression to the mean; a matched-activity control would isolate the pure habit effect.)*
+
+### 5.6 Honest revision: the true delay penalty is smaller than the raw gradient *(code [§6.6](analysis.ipynb#sec66))*
+The 14.5% → 5.4% gradient in §3.3 partly reflects **calendar truncation** (late-delivered customers had fewer days left to reorder before the data ends). Giving every customer the same **21-day clock starting at delivery** (deliveries ≤ May 10 only), the rates become **9.8% (0–4d) vs ~7.1–8.0% (delayed)** — a **~25% relative penalty**, or roughly **~1,000 lost reorders rather than the naive ~2,400**. The delay effect is real and material, but about half the naive estimate. TL;DR #4 and §3.3 should be read with this correction.
+
+### 5.7 A refill-demand planning number *(code [§6.7](analysis.ipynb#sec67))*
+From well-served owners' steady-state behaviour: **per 1,000 bottle owners, expect ~140 refill orders (~500 pod packs) per month**. First-month estimate from the launch cohort — refine with June+ data — but it's the number production planning lacked when the gap happened.
+
+---
+
+*Time spent: ~4.5 hours end-to-end (data audit, analysis, charts, write-up, further analyses), with the analysis fully scripted in Python/pandas for reproducibility.*

@@ -2,8 +2,10 @@
 
 *Rodrigo Uehara Guskuma · July 2026*
 
-**Accompanying files:** `analysis.ipynb` (all computations behind Parts 1 and Appendix A — the `(code §…)` tags
-throughout this document point to its sections) and the `charts/` folder (images embedded below).
+**Code:** all computations behind this document live in
+[`analysis.ipynb`](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb)
+(rendered on GitHub with outputs) — the `(code §…)` tags throughout point to its numbered sections.
+Full repository: <https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma>
 
 | Contents | |
 |---|---|
@@ -21,7 +23,7 @@ throughout this document point to its sections) and the `charts/` folder (images
 
 > **Data prep:** duplicate orders deduped, fully-cancelled orders excluded, orphan line items dropped, delivery delay computed as `delivered_at − order_date`. Details and open data questions in [Appendix A — Data Quality Review](#appendix-a).
 >
-> **Code:** every number in this document is produced by **[analysis.ipynb](analysis.ipynb)** — each section carries a `(code §…)` tag pointing to the notebook section that computes it (cleaning rules in [§2](analysis.ipynb#sec2)).
+> **Code:** every number in this document is produced by **[analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb)** — each section carries a `(code §…)` tag pointing to the notebook section that computes it (cleaning rules in [§2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec2)).
 
 ---
 
@@ -30,7 +32,7 @@ throughout this document point to its sections) and the `charts/` folder (images
 1. **The launch worked as a demand event.** Campaign revenue ran at **+124% per day vs. the pre-period** (+60% excluding launch day). Launch day alone did ~€3.4M — 6× a normal day — and half of all campaign bottle volume.
 2. **It was an existing-customer launch, not an acquisition launch.** Only **22.9%** of syrup-bottle orders came from first-time customers vs. 47.9% for non-syrup orders in the same window. The syrup bottle monetized the base; it did not (yet) bring new people in.
 3. **DE carried it**: 74% of bottle units, 56.8% of DE campaign orders contained a bottle (FR 30.3%, UK 22.3%). FR underperformed its size (+55% revenue uplift vs. DE +191%).
-4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops monotonically with delay: **14.5% (delivered ≤4 days) → 5.4% (>14 days)**. Roughly **2,400 reorders (~4.5pp of retention) were likely lost** to late delivery.
+4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops with delay: **14.5% (delivered ≤4 days) → 5.4% (>14 days)** raw; after correcting for calendar truncation the causal penalty is **~25% lower reorder likelihood, ≈1,000 lost reorders** (§5.6). It was also a **single-warehouse (POZ1) problem** — NOT1 shipped bottles on time throughout (§5.4).
 5. **Early retention is real but shallow:** 10.1% of identifiable campaign bottle buyers re-bought syrup within ~4 weeks (median 23 days to reorder), mostly via the May 12 3er pod bundles — evidence the refill model works. No cannibalisation of the core Energy business is visible.
 
 ---
@@ -59,7 +61,7 @@ throughout this document point to its sections) and the `charts/` folder (images
 
 ## 2. Campaign analysis
 
-### 2.1 Baseline & uplift *(code [§3.1](analysis.ipynb#sec31))*
+### 2.1 Baseline & uplift *(code [§3.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec31))*
 
 ![Daily gross revenue](charts/daily_revenue.png)
 
@@ -73,13 +75,13 @@ throughout this document point to its sections) and the `charts/` folder (images
 - The post-period stays ~40% above pre, but is **contaminated upward** by the May 12 3er launch, a May 18 sampling giveaway and the May 27 Summer Cocktail launch — read it as "elevated, partly for other reasons", not as pure campaign halo.
 - **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. Without media spend data we can measure *uplift*, not *ROI*.
 
-### 2.2 Existing vs. new customers *(code [§3.2](analysis.ipynb#sec32))*
+### 2.2 Existing vs. new customers *(code [§3.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec32))*
 
 - Campaign first-order share **fell** to 36.8% (pre: 46.9%) — the extra demand was disproportionately **existing customers**.
 - Bottle orders: **22.9% new** vs. 47.9% for non-bottle orders in the campaign window.
 - **What the data shows:** the syrup launch activated the base. **My interpretation:** that's the right sequencing for a new format (fans forgive teething problems), but H2 needs an acquisition angle for syrup — currently it doesn't pull new customers.
 
-### 2.3 Market breakdown *(code [§3.3](analysis.ipynb#sec33))*
+### 2.3 Market breakdown *(code [§3.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec33))*
 
 ![Market breakdown](charts/market_breakdown.png)
 
@@ -91,13 +93,13 @@ throughout this document point to its sections) and the `charts/` folder (images
 
 FR is the underperformer relative to its base size (FR is ~40% of pre-period revenue but took only 21% of bottle units). Hypotheses to check with the team: weaker localisation/creator support, price sensitivity, or the campaign being DE-centric by design.
 
-### 2.4 Daily trend *(code [§3.4](analysis.ipynb#sec34))*
+### 2.4 Daily trend *(code [§3.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec34))*
 
 ![Daily bottle units](charts/daily_bottles.png)
 
 Launch day sold **31,594 bottles — 50% of total campaign bottle volume** — then decayed to a steady ~1,000–1,600/day for the rest of the campaign, settling at ~400–900/day post-campaign with a clear bump on May 12 (3er launch). The demand curve is a classic hype-then-baseline launch; the post-campaign bottle baseline (~500/day) is the number to plan production against.
 
-### 2.5 Category mix *(code [§3.5](analysis.ipynb#sec35))*
+### 2.5 Category mix *(code [§3.5](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec35))*
 
 Share of gross revenue by category:
 
@@ -117,7 +119,7 @@ Syrup instantly became the #1 category during the campaign, and **retains ~14% o
 
 ## 3. Products deep dive
 
-### 3.1 Adoption & buying behaviour *(code [§3.6](analysis.ipynb#sec36), [§3.7](analysis.ipynb#sec37))*
+### 3.1 Adoption & buying behaviour *(code [§3.6](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec36), [§3.7](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec37))*
 
 - **44.5% of all campaign orders (55,487 of 124,767) contained a syrup bottle**; 62,836 bottles sold in 16 days.
 - Flavour split: **Darko 49% · Syru 34% · Raptor 17%** — consistent enough that no flavour flopped, skewed enough to plan production toward Darko.
@@ -125,11 +127,11 @@ Syrup instantly became the #1 category during the campaign, and **retains ~14% o
 - 88% of bottle orders took exactly one bottle (mean 1.13) — one bottle per household; multi-bottle gifting didn't materialize.
 - **Bottle orders spend more:** AOV €91.7 vs €74.7 for campaign non-bottle orders (+23%).
 
-### 3.2 Cross-purchase *(code [§3.8](analysis.ipynb#sec38))*
+### 3.2 Cross-purchase *(code [§3.8](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec38))*
 
 Among bottle orders (besides the bundled pods/sticker): **30% added a Shaker, 24% Merch, 16% an Energy tub**, 9% Iced Tea, 9% Hydration. Only 0.1% bought the bottle bundle alone. Syrup buyers are engaged multi-category customers — supports the "monetize the fans" read.
 
-### 3.3 Delivery delay impact — the costliest lesson of the launch *(code [§3.9](analysis.ipynb#sec39))*
+### 3.3 Delivery delay impact — the costliest lesson of the launch *(code [§3.9](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec39))*
 
 Bottle orders were dramatically slower than the rest of the shop:
 
@@ -142,14 +144,14 @@ By order week, bottle orders placed in **weeks 18–19 (Apr 27 – May 10) waite
 
 ![Delay vs reorder](charts/delay_vs_reorder.png)
 
-Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, late delivery cost roughly **2,400 reorder customers (~4.5pp of cohort retention — i.e. retention could have been ~14.5% instead of 10.1%)**.
-*Caveat (interpretation):* delay correlates with order date, so late orderers also had less time to reorder before May 31 — the true causal effect is somewhat smaller; the gradient within same-week orderers still supports a real effect.
+Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, the naive estimate is **~2,400 lost reorder customers (~4.5pp of cohort retention)**.
+*Correction (see §5.6):* part of this gradient is calendar truncation — late-delivered customers had fewer days left to reorder before the data ends. A fixed 21-day-after-delivery window puts the **causal penalty at ~25% lower reorder likelihood, ≈1,000 lost reorders**. Still material, about half the naive read.
 
 ---
 
 ## 4. After the campaign
 
-### 4.1 Retention & reorders *(code [§3.10](analysis.ipynb#sec310), [§3.12](analysis.ipynb#sec312))*
+### 4.1 Retention & reorders *(code [§3.10](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec310), [§3.12](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec312))*
 
 Of **53,738 identifiable campaign bottle buyers**:
 
@@ -158,7 +160,7 @@ Of **53,738 identifiable campaign bottle buyers**:
 - 3er bundle buyers since May 12: 10,236 orders, only **9.3% first-time customers**, and **42.4% verifiably owned a bottle already** — it is functioning as a retention product, as intended. (The other ~58% may have bought bottles before Apr 1, via another channel, or are gift buyers — worth checking, and one of my interviewer questions.)
 - Reorder flavour ranking (Peach, Cola Ice Pop, Green Apple on top) is the first read on which refill flavours to scale.
 
-### 4.2 Cannibalisation risk *(code [§3.11](analysis.ipynb#sec311))*
+### 4.2 Cannibalisation risk *(code [§3.11](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec311))*
 
 **No evidence of cannibalisation so far — if anything the opposite:**
 
@@ -172,7 +174,7 @@ Of **53,738 identifiable campaign bottle buyers**:
 **Worked:** launch-day activation of the base (28% of campaign volume in one day); bundle architecture (100% pods attach = every bottle owner starts the refill loop); the May 12 3er bundle timed to the refill cycle; a durable post-campaign syrup baseline (~14% of revenue).
 
 **Needs improvement:**
-1. **Fulfilment readiness** — the production gap measurably burned ~4–5pp of early retention; late-campaign buyers had a first experience of waiting 5+ weeks.
+1. **Fulfilment readiness** — the production gap measurably burned early retention (~1,000 reorders on the corrected estimate, §5.6) and it was POZ1-specific (§5.4); late-campaign buyers had a first experience of waiting 5+ weeks.
 2. **FR performance** — 55% uplift vs DE's 191%; diagnose localisation/creator mix before H2.
 3. **New-customer angle** — syrup didn't acquire; consider a syrup-led acquisition offer now that the base is saturated with bottles.
 
@@ -185,7 +187,34 @@ Of **53,738 identifiable campaign bottle buyers**:
 
 ---
 
-*Time spent: ~3.5 hours end-to-end (data audit, analysis, charts, write-up), with the analysis fully scripted in Python/pandas for reproducibility.*
+## 5. Further analysis — beyond the brief's guiding questions
+
+Seven analyses the case didn't ask for but that sharpen — and in one case honestly **revise** — the findings above.
+
+### 5.1 Refunds & cancellations *(code [§6.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec61))*
+Refund incidence is tiny (~0.4% of campaign orders) and does **not** rise with delivery delay; cancellations are 2.7× higher for bottle orders (0.9% vs 0.3%) but still small. **The production gap's cost was retention, not immediate revenue give-back** — no product-quality red flag in refunds for a first-ever product.
+
+### 5.2 The May 18 sampling giveaway barely converted *(code [§6.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec62))*
+The 5.4k new customers who received free samples on May 18 converted to a **paid order within 13 days at just 0.37%**, vs **4.8%** repeat-paid for organically acquired new customers in a matched window — ~13× worse. Short-term, the giveaway generated traffic, not customers. *(Caveat: 13 days is short; the leads may still monetise via CRM.)*
+
+### 5.3 Campaign-acquired new customers are weaker, not stronger *(code [§6.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec63))*
+Fixed 21-day repeat window: campaign new customers **with** a bottle repeat at **4.5%**, vs 8.5% for campaign new customers without one and 9.3% for pre-period new customers. Even accounting for the ~23-day syrup refill cycle and the delivery delays, this further weakens syrup as an acquisition tool: it pulled few new customers (§2.2) and the ones it pulled repeat less — consistent with hype/gift buyers.
+
+### 5.4 The production gap was a single-warehouse problem *(code [§6.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec64))*
+Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix (and consider cross-shipping from NOT1 during launches).
+
+### 5.5 The launch re-activated dormant customers — and they stayed active *(code [§6.5](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec65))*
+Existing customers who bought a bottle nearly **doubled their total spend/day post-campaign (+88%)** while the matched control group *declined* (−5%). Notably, the bottle cohort was **less active pre-campaign** despite being larger — the launch pulled dormant fans back, and they kept ordering. *(Interpretation caveat: part of the lift is syrup refills themselves plus regression to the mean; a matched-activity control would isolate the pure habit effect.)*
+
+### 5.6 Honest revision: the true delay penalty is smaller than the raw gradient *(code [§6.6](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec66))*
+The 14.5% → 5.4% gradient in §3.3 partly reflects **calendar truncation** (late-delivered customers had fewer days left to reorder before the data ends). Giving every customer the same **21-day clock starting at delivery** (deliveries ≤ May 10 only), the rates become **9.8% (0–4d) vs ~7.1–8.0% (delayed)** — a **~25% relative penalty**, or roughly **~1,000 lost reorders rather than the naive ~2,400**. The delay effect is real and material, but about half the naive estimate. TL;DR #4 and §3.3 should be read with this correction.
+
+### 5.7 A refill-demand planning number *(code [§6.7](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec67))*
+From well-served owners' steady-state behaviour: **per 1,000 bottle owners, expect ~140 refill orders (~500 pod packs) per month**. First-month estimate from the launch cohort — refine with June+ data — but it's the number production planning lacked when the gap happened.
+
+---
+
+*Time spent: ~4.5 hours end-to-end (data audit, analysis, charts, write-up, further analyses), with the analysis fully scripted in Python/pandas for reproducibility.*
 
 
 ---
@@ -195,11 +224,11 @@ Of **53,738 identifiable campaign bottle buyers**:
 
 *Inputs: MMM v5.3.1 memo (Section A) + DE attribution data Mar–May 2026 (Section B). Constraints: €35M total · €4M brand (fixed) · €800K TV locked in Q3 · €31M flexible performance budget.*
 
-> **Code:** the memo PDF extraction, its tables transcribed as data, and every derived number in this document are in **[analysis.ipynb](analysis.ipynb) §5** — PDF extraction [§5.1](analysis.ipynb#sec51), memo tables [§5.2](analysis.ipynb#sec52), derived analysis & MMM-vs-attribution conflicts [§5.3](analysis.ipynb#sec53), allocation checksums [§5.4](analysis.ipynb#sec54).
+> **Code:** the memo PDF extraction, its tables transcribed as data, and every derived number in this document are in **[analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb) §5** — PDF extraction [§5.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec51), memo tables [§5.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec52), derived analysis & MMM-vs-attribution conflicts [§5.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec53), allocation checksums [§5.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec54).
 
 ---
 
-## 0. The elephant in the room (read this first) *(code [§5.3](analysis.ipynb#sec53))*
+## 0. The elephant in the room (read this first) *(code [§5.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec53))*
 
 The MMM team's own optimised plan spends **€16.1M** in H2 — the task asks me to allocate **€35M**, i.e. **2.2× the model-optimal level** and ~1.8× the H1 run-rate (~€19.3M/half). The MMM says META's marginal ROI is already ~0.99 at *current* spend and TikTok's drops to 0.63 at just +50% spend. **At €31M of performance spend, the marginal euros are, per the model, value-destructive.**
 
@@ -218,7 +247,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 5. **Hold a testing & flex reserve** — with model holdout R² of 0.29, buying information is worth more than the last saturated media euro. The reserve deploys in Q4 into whatever the Q3 tests validate.
 6. **Phase Q3 < Q4** (≈ 40/60): H2 contains Black Week + Christmas; saturation ceilings are higher when demand is elevated.
 
-### 1.2 Channel-by-channel plan (H2 totals) *(code [§5.4](analysis.ipynb#sec54))*
+### 1.2 Channel-by-channel plan (H2 totals) *(code [§5.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec54))*
 
 | Channel | H1 actual (≈26wk) | **H2 plan** | vs H1 | Logic |
 |---|---|---|---|---|
@@ -231,7 +260,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 | **Brand (fixed)** | €5.8M | **€4.0M** | −31% | See split below |
 | **TOTAL** | ~€19.3M | **€35.0M** | +81% | |
 
-### 1.3 Brand envelope (€4.0M) *(code [§5.4](analysis.ipynb#sec54))*
+### 1.3 Brand envelope (€4.0M) *(code [§5.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec54))*
 
 Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window *understates* brand (so I don't zero-out anything structural):
 
@@ -246,7 +275,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 | Performance Awareness | 0.43 | €0.15M | Near-exit; keep a measurement stub |
 | **Total** | | **€4.00M** | |
 
-### 1.4 Quarterly phasing *(code [§5.4](analysis.ipynb#sec54))*
+### 1.4 Quarterly phasing *(code [§5.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec54))*
 
 | | Q3 | Q4 | Rationale |
 |---|---|---|---|
@@ -291,7 +320,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 | H1 run-rates from the memo (§5.2) are accurate actuals | High |
 | Brand's true ROI exceeds the measured 1.04× (8-week window) | Medium-high — standard MMM limitation, memo agrees |
 
-### 3.2 Unclear or unusual data points, and how I handled them *(code [§5.3](analysis.ipynb#sec53))*
+### 3.2 Unclear or unusual data points, and how I handled them *(code [§5.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec53))*
 
 1. **The memo optimises €16.1M while the task hands me €35M.** The single most important inconsistency — the "recommendation" I was given as primary input argues against my budget. Handled by treating €35M as a constraint, phasing toward Q4, and reserving budget for measurement (see §0).
 2. **YouTube Paid Social: iROAS 37×, mROI "20 (capped)" on €0.07M spend (0.5% of PS).** A €2.82M contribution from €70K spend is not credible; the model itself caps it and flags LOW confidence. Handled: treated as "promising, unproven"; staged test allocation only.
@@ -330,7 +359,7 @@ Systematic audit of `orders.csv`, `order_items.csv`, `products.csv` and `shipmen
 Every issue below was verified with code; numbers are exact counts from the files as delivered.
 Issues are grouped by severity, and each one ends with the **question I would ask the interviewer / data owner**.
 
-> **Reproducibility:** every check runs in **[analysis.ipynb](analysis.ipynb)** — the `(code §…)` tag on each issue names the notebook section that produces the exact counts quoted.
+> **Reproducibility:** every check runs in **[analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb)** — the `(code §…)` tag on each issue names the notebook section that produces the exact counts quoted.
 
 ---
 
@@ -355,22 +384,22 @@ The files do not match the schemas described in the case brief:
 
 ## 2. High-impact issues (materially affect the analysis)
 
-### 2.1 Duplicate orders — 500 duplicated `order_id`s in `orders.csv` *(code [§1.1](analysis.ipynb#sec11))*
+### 2.1 Duplicate orders — 500 duplicated `order_id`s in `orders.csv` *(code [§1.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec11))*
 1,000 rows carry 500 duplicated IDs. 445 pairs are *not* byte-identical — they differ slightly in `shipping_revenue` (e.g. 0.00 vs 0.03/0.05). Looks like an export dedup failure.
 **Handling:** kept the first occurrence. **Ask:** which extract is canonical, and is `shipping_revenue` reliable at all?
 
-### 2.2 200 orphan order_items (`ORD-900001`–`ORD-900200`) *(code [§1.2](analysis.ipynb#sec12))*
+### 2.2 200 orphan order_items (`ORD-900001`–`ORD-900200`) *(code [§1.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec12))*
 200 line items reference order IDs that don't exist in `orders.csv` — and the ID range (900k) is far outside the normal range (~345k). Looks like injected test data or a truncated orders extract.
 **Handling:** excluded. **Ask:** are these test records, or is `orders.csv` missing rows?
 
-### 2.3 No cancellation flag + re-shipment duplication in `shipments.csv` *(code [§1.4](analysis.ipynb#sec14))*
+### 2.3 No cancellation flag + re-shipment duplication in `shipments.csv` *(code [§1.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec14))*
 - `shipments.csv` has 366,218 rows for ~345k orders: **21,555 orders have 2–4 shipment rows** (typical pattern: shipped → cancelled → shipped again weeks later). Naively joining shipments to orders double-counts and mixes up delivery dates.
 - 1,545 orders have *only* cancelled/ignored shipment rows (my proxy for a cancelled order); 270 orders have no shipment row at all.
 
 **Handling:** used the *first delivered* shipment per order for delay analysis; flagged orders whose every shipment row is cancelled as "cancelled" and excluded them.
 **Ask:** what is the correct definition of a cancelled order? And do multiple shipment rows mean split shipments, replacements, or subscription-like repeat deliveries? (Many orders show two *successful* deliveries ~3–4 weeks apart, e.g. shipped Apr 23 and again May 18 — replacement shipments for the syrup production gap?)
 
-### 2.4 Inconsistent net/gross revenue definitions in `orders.csv` *(code [§1.1](analysis.ipynb#sec11), [§1.2](analysis.ipynb#sec12))*
+### 2.4 Inconsistent net/gross revenue definitions in `orders.csv` *(code [§1.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec11), [§1.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec12))*
 - **37,098 orders (10.8%) have `net_revenue` > `gross_revenue`.** In these rows `net_revenue ≈ gross_revenue + shipping_revenue` exactly — i.e. net *includes* shipping while gross excludes it, unlike all other rows.
 - 764 orders have negative `net_revenue` with positive gross.
 - Net/gross ratios are otherwise VAT-coherent (UK ≈ 1/1.20; DE mixes 7% food / 19% standard; FR mixes 5.5% / 20%), which confirms the general logic is right but the shipping treatment is inconsistent.
@@ -378,14 +407,14 @@ The files do not match the schemas described in the case brief:
 
 **Handling:** I ran the whole analysis on **gross revenue**, which is internally consistent. **Ask:** what exactly is `net_revenue` net *of* (VAT? discounts? shipping in or out?), and why does it flip sign/definition on a subset of orders?
 
-### 2.5 5,490 order-item rows with negative `net_revenue` but positive `gross_revenue` *(code [§1.2](analysis.ipynb#sec12))*
+### 2.5 5,490 order-item rows with negative `net_revenue` but positive `gross_revenue` *(code [§1.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec12))*
 Including rows like gross €9.03 / net −€16.84. Possibly discount over-allocation on bundle decomposition. **Handling:** gross used throughout. **Ask:** is bundle discount allocation known to over-assign discounts to low-price components?
 
-### 2.6 `shipments.is_on_time` looks broken *(code [§1.4](analysis.ipynb#sec14))*
+### 2.6 `shipments.is_on_time` looks broken *(code [§1.4](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec14))*
 344,406 rows are `False`, only 5,647 `True` — even 1–2-day deliveries are flagged not-on-time. Also `days_to_delivery` disagrees with `delivered_at − order_date` by >1 day in 145k rows (it appears to be measured from `shipped_at`, not order date). One row has `days_to_delivery = −1`.
 **Handling:** ignored `is_on_time` and `days_to_delivery`; computed delay as `delivered_at − order_date` myself. **Ask:** what SLA does `is_on_time` encode, and from which anchor timestamp is `days_to_delivery` counted?
 
-### 2.7 13,724 order-item rows reference SKUs missing from `products.csv` *(code [§1.2](analysis.ipynb#sec12), [§1.3](analysis.ipynb#sec13))*
+### 2.7 13,724 order-item rows reference SKUs missing from `products.csv` *(code [§1.2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec12), [§1.3](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec13))*
 Top offenders:
 
 | SKU | Rows | Note |
@@ -399,7 +428,7 @@ Top offenders:
 
 **Handling:** kept the rows (they carry real revenue) but they fall out of any category-level view. **Ask:** what is `10-00-42-0020`, and should the free-text/malformed SKUs be mapped back to real products?
 
-### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code [§1.1](analysis.ipynb#sec11))*
+### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code [§1.1](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec11))*
 - 3,450 orders have **no `customer_id`** — these can never appear in reorder/retention metrics.
 - **1,583 customers have more than one order flagged `is_first_order = TRUE`.**
 - 10,137 orders are `is_first_order=TRUE` but `is_first_paid_order=FALSE` (plausible if the first order was free), yet 1,211 are the reverse — `is_first_order=FALSE` but `is_first_paid_order=TRUE` *and* that combination is hard to explain if flags are computed consistently.
@@ -408,7 +437,7 @@ Top offenders:
 
 ---
 
-## 3. Anomalies that look like business events, not errors (need context) *(code [§1.5](analysis.ipynb#sec15))*
+## 3. Anomalies that look like business events, not errors (need context) *(code [§1.5](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec15))*
 
 These change how the campaign windows should be read — I'd validate my reading with the team:
 
@@ -436,7 +465,7 @@ These change how the campaign windows should be read — I'd validate my reading
 
 ---
 
-## 5. Cleaning rules applied in my analysis *(code [§2](analysis.ipynb#sec2))*
+## 5. Cleaning rules applied in my analysis *(code [§2](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb#sec2))*
 
 | Rule | Rows affected |
 |---|---|
@@ -466,7 +495,7 @@ These change how the campaign windows should be read — I'd validate my reading
 | **[Part 1](#part-1)** | Question 1 — Syrup Campaign analysis, written as a briefing for the Head of Marketing (KPIs, uplift, adoption, delays, retention, cannibalisation, recommendations) |
 | **[Part 2](#part-2)** | Question 2 — €35M H2 budget allocation, incrementality testing roadmap, and strategic reflection on the MMM memo + attribution data |
 | **[charts/](charts/)** | Four PNG charts referenced by the Q1 write-up |
-| **[analysis.ipynb](analysis.ipynb)** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5) — the .md files link into its sections |
+| **[analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb)** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
 
 ---
 
@@ -511,7 +540,10 @@ Four charts, built per the dataviz method (form chosen by the data's job, single
 4. Designed the testing roadmap around the three biggest MMM-vs-attribution conflicts (Influencer, Google/Affiliate, TikTok/META), with sequencing and a Black-Week test freeze.
 5. Wrote the strategic reflection: assumptions with confidence levels, 9 flagged data oddities and how each was handled, 10 missing-context asks.
 
-### Phase 5 — Write-ups
+### Phase 5 — Further analyses (beyond the brief)
+Seven additional analyses (notebook §6, write-up §5 of the Q1 briefing): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
+
+### Phase 6 — Write-ups
 Each deliverable written for its audience: Q1 as a marketing-leadership briefing (findings first, method in footnotes), Q2 as a planning document (logic per line item), data review as an engineering-style audit (issue → evidence → handling → question).
 
 ---
@@ -521,7 +553,7 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 - **Audit before analysis** — every headline number sits on the cleaning rules from Phase 1, and those rules are documented and reversible.
 - **Data vs. interpretation kept separate** — write-ups label "what the data shows" vs. "my hypothesis" (per the case's explicit requirement).
 - **Relative numbers over absolutes** — per the dataset disclaimer, all conclusions are ratios, shares and deltas.
-- **Reproducibility** — everything numeric comes from [analysis.ipynb](analysis.ipynb) (no spreadsheet hand-edits); the write-ups cite notebook sections (`code §…`) so any figure can be regenerated or challenged.
+- **Reproducibility** — everything numeric comes from [analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb) (no spreadsheet hand-edits); the write-ups cite notebook sections (`code §…`) so any figure can be regenerated or challenged.
 - **Say the uncomfortable thing** — the Q2 answer leads with the budget being ~2× model-optimal; the Q1 answer quantifies what the production gap cost in retention.
 
 ## 4. Known limitations of this work
@@ -540,5 +572,6 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 | Data quality audit | ~45 min |
 | Q1 analysis + charts | ~1.5 h |
 | Q2 desk analysis | ~45 min |
+| Further analyses | ~1 h |
 | Write-ups | ~1.5 h |
-| **Total** | **~5 h** (tool-assisted, fully scripted) |
+| **Total** | **~6 h** (tool-assisted, fully scripted) |

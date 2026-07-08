@@ -13,7 +13,7 @@
 | **[q1-campaign-analysis.md](q1-campaign-analysis.md)** | Question 1 — Syrup Campaign analysis, written as a briefing for the Head of Marketing (KPIs, uplift, adoption, delays, retention, cannibalisation, recommendations) |
 | **[q2-h2-budget-plan.md](q2-h2-budget-plan.md)** | Question 2 — €35M H2 budget allocation, incrementality testing roadmap, and strategic reflection on the MMM memo + attribution data |
 | **[charts/](charts/)** | Four PNG charts referenced by the Q1 write-up |
-| **[analysis.ipynb](analysis.ipynb)** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5) — the .md files link into its sections |
+| **[analysis.ipynb](analysis.ipynb)** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
 
 ---
 
@@ -58,7 +58,10 @@ Four charts, built per the dataviz method (form chosen by the data's job, single
 4. Designed the testing roadmap around the three biggest MMM-vs-attribution conflicts (Influencer, Google/Affiliate, TikTok/META), with sequencing and a Black-Week test freeze.
 5. Wrote the strategic reflection: assumptions with confidence levels, 9 flagged data oddities and how each was handled, 10 missing-context asks.
 
-### Phase 5 — Write-ups
+### Phase 5 — Further analyses (beyond the brief)
+Seven additional analyses (notebook §6, write-up §5 of the Q1 briefing): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
+
+### Phase 6 — Write-ups
 Each deliverable written for its audience: Q1 as a marketing-leadership briefing (findings first, method in footnotes), Q2 as a planning document (logic per line item), data review as an engineering-style audit (issue → evidence → handling → question).
 
 ---
@@ -87,5 +90,6 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 | Data quality audit | ~45 min |
 | Q1 analysis + charts | ~1.5 h |
 | Q2 desk analysis | ~45 min |
+| Further analyses | ~1 h |
 | Write-ups | ~1.5 h |
-| **Total** | **~5 h** (tool-assisted, fully scripted) |
+| **Total** | **~6 h** (tool-assisted, fully scripted) |
