@@ -45,7 +45,7 @@
 <a id="q1-21"></a>
 ### 2.1 Baseline & uplift *(code: analysis.ipynb §3.1)*
 
-![Daily gross revenue](charts/daily_revenue.png)
+![Daily gross revenue](../charts/daily_revenue.png)
 
 | Period | Days | Orders/day | Gross €/day | AOV | First-order share |
 |---|---|---|---|---|---|
@@ -55,7 +55,7 @@
 
 - Excluding launch day, the campaign still ran **+49% orders / +60% revenue per day** — the uplift was not just one spike. *(code: analysis.ipynb §3.1)*
 - The post-period stays ~40% above pre, but is **contaminated upward** by the May 12 3er launch, a May 18 sampling giveaway and the May 27 Summer Cocktail launch — read it as "elevated, partly for other reasons", not as pure campaign halo. *(code: +40% in analysis.ipynb §3.1; event evidence §1.5 and §3.12; all three annotated in the §4.1 chart)*
-- **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. This analysis quantifies the **demand uplift** the campaign generated; pairing it with the campaign's spend (media, CRM, influencer fees) would convert these numbers into true **ROI/ROAS** — the first data request I'd make to complete the launch evaluation. *(code: analysis.ipynb §3.1)*
+- **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. This analysis can only quantify the **demand uplift** the campaign generated; If it could be paired with the campaign's spend (media, CRM, influencer fees) it would be possible to convert these numbers into true **ROI/ROAS** — this would be the first data request I'd make to complete the launch evaluation. *(code: analysis.ipynb §3.1)*
 
 <a id="q1-22"></a>
 ### 2.2 Existing vs. new customers *(code: analysis.ipynb §3.2)*
@@ -67,7 +67,7 @@
 <a id="q1-23"></a>
 ### 2.3 Market breakdown *(code: analysis.ipynb §3.3)*
 
-![Market breakdown](charts/market_breakdown.png)
+![Market breakdown](../charts/market_breakdown.png)
 
 | Market | Revenue uplift (campaign vs pre, €/day) | Bottle units share | Bottle penetration of campaign orders |
 |---|---|---|---|
@@ -80,7 +80,7 @@ FR is the underperformer relative to its base size (FR is ~40% of pre-period rev
 <a id="q1-24"></a>
 ### 2.4 Daily trend *(code: analysis.ipynb §3.4)*
 
-![Daily bottle units](charts/daily_bottles.png)
+![Daily bottle units](../charts/daily_bottles.png)
 
 Launch day sold **31,594 bottles — 50% of total campaign bottle volume** — then decayed to a steady ~1,000–1,600/day for the rest of the campaign, settling at ~400–900/day post-campaign with a clear bump on May 12 (3er launch). The demand curve is a classic hype-then-baseline launch; the post-campaign bottle baseline (~500/day) is the number to plan production against.
 
@@ -131,7 +131,7 @@ Bottle orders were dramatically slower than the rest of the shop:
 
 By order week, bottle orders placed in **weeks 18–19 (Apr 27 – May 10) waited a median 38–40 days** — the production gap hit customers who ordered late in the campaign; service recovered to ~5 days by week 20.
 
-![Delay vs reorder](charts/delay_vs_reorder.png)
+![Delay vs reorder](../charts/delay_vs_reorder.png)
 
 Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, the naive estimate is **~2,400 lost reorder customers (~4.5pp of cohort retention)**.
 *Correction (see [§5.6](#q1-56)):* part of this gradient is calendar truncation — late-delivered customers had fewer days left to reorder before the data ends. A fixed 21-day-after-delivery window puts the **causal penalty at ~25% lower reorder likelihood, ≈1,000 lost reorders**. Still material, about half the naive read.

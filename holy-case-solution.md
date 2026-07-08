@@ -519,7 +519,7 @@ These change how the campaign windows should be read — I'd validate my reading
 ## 2. Workflow (in execution order)
 
 ### Phase 0 — Intake
-1. Read `case-definition.md` (both questions, schemas, constraints, guiding questions).
+1. Read `case-materials/case-definition.md` (both questions, schemas, constraints, guiding questions).
 2. Inventoried the project folder; extracted the CMO memo PDF to text (3 pages: MMM v5.3.1 results, H2 recommendation, DE attribution Mar–May 2026).
 3. Previewed all four CSVs — **immediately found the schemas don't match the brief** (no `channel`/`is_cancelled` columns, extra columns, different file/field names), which promoted the data audit from a formality to a first-class workstream.
 

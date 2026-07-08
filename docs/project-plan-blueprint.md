@@ -12,7 +12,7 @@
 | **[data-quality-review.md](data-quality-review.md)** | Full audit of the 4 CSVs: verified errors, anomalies, cleaning rules applied, and the top 10 questions for the interviewer |
 | **[q1-campaign-analysis.md](q1-campaign-analysis.md)** | Question 1 — Syrup Campaign analysis, written as a briefing for the Head of Marketing (KPIs, uplift, adoption, delays, retention, cannibalisation, recommendations) |
 | **[q2-h2-budget-plan.md](q2-h2-budget-plan.md)** | Question 2 — €35M H2 budget allocation, incrementality testing roadmap, and strategic reflection on the MMM memo + attribution data |
-| **[charts/](charts/)** | Four PNG charts referenced by the Q1 write-up |
+| **[charts/](../charts/)** | Four PNG charts referenced by the Q1 write-up |
 | **analysis.ipynb** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
 
 ---
@@ -20,7 +20,7 @@
 ## 2. Workflow (in execution order)
 
 ### Phase 0 — Intake
-1. Read `case-definition.md` (both questions, schemas, constraints, guiding questions).
+1. Read `case-materials/case-definition.md` (both questions, schemas, constraints, guiding questions).
 2. Inventoried the project folder; extracted the CMO memo PDF to text (3 pages: MMM v5.3.1 results, H2 recommendation, DE attribution Mar–May 2026).
 3. Previewed all four CSVs — **immediately found the schemas don't match the brief** (no `channel`/`is_cancelled` columns, extra columns, different file/field names), which promoted the data audit from a formality to a first-class workstream.
 
