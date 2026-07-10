@@ -31,7 +31,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 |---|---|---|---|---|
 | **Paid Social** | €5.9M | **€17.0M** | +186% | Largest share; least-bad saturation profile. META €10.0M (workhorse, mROI ~1 → run to breakeven), TikTok €5.5M (momentum, front-scale but gated by the Aug stress test), YouTube paid €1.5M (scaling test of the "37× iROAS" signal — treated as unproven, capped, staged) |
 | **Influencer** | €7.0M | **€9.6M** | +37% | Forced above optimal by the budget constraint. Mix shift: YouTube Inf. share cut from ~50% toward Podcast / TikTok Inf. / Instagram (mROI 0.5–0.8); renegotiate or exit floor-driven contracts; whitelisting/paid-amplification bridges Influencer → Paid Social |
-| **Google Search** | €0.15M | **€1.0M** | ~6.7× | Highest mROI, tiny base. Phase: 2× run-rate in Q3 (the memo's controlled test), scale to plan in Q4 only if the brand-keyword holdout confirms incrementality |
+| **Google Search** | €0.15M | **€1.0M** | ~6.7× | Highest mROI, tiny base. Phase: 2× run-rate in Q3 (the memo's controlled test), scale to plan in Q4 only if the brand-keyword holdout confirms incrementality. Note: the memo's Google mROI (4.46) *exceeds* its average iROAS (4.09) — increasing marginal returns are atypical for an ad channel and smell like a small-base/attribution artifact; one more reason the scale-up is gated |
 | **Affiliate** | €0.46M | **€0.9M** | ~2× | mROI 1.78; scale moderately; audit coupon-poaching first |
 | **Testing & flex reserve** | — | **€2.5M** | — | Funds incrementality tests + Q4 reallocation into validated winners (likely destinations: TikTok scale-up, Google, or promo support in Black Week) |
 | **Performance subtotal** | €13.5M | **€31.0M** | | |
@@ -63,7 +63,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 
 ### 1.5 Why this plan carries no point revenue projection
 
-Deliberately. The model's holdout R² is 0.29 and €35M is ~2.2× beyond the spend range it was fitted on — any point forecast would be false precision. Directional bounds only: the outcome should not sit *below* the memo's €57M projection (media effects are constrained non-negative, and we spend strictly more), while a naive linear extrapolation of the memo's plan (€70M+) is an upper bound that saturation guarantees we will not reach. The honest deliverable is the ranking, the phasing and the tests — the Q3 experiments in Task 2 are what turn this allocation into a defensible Q4 forecast.
+Deliberately. The model's holdout R² is 0.29, and €35M per half is ~3.5× the average half-year media spend in its 125-week training window (€48M total) — H1 itself already ran ~1.8× above that long-run average — so a point forecast would extrapolate far outside fitted territory with false precision. Directional bounds only: the outcome should not sit *below* the memo's €57M projection (media effects are constrained non-negative, and we spend strictly more), while a naive linear extrapolation of the memo's plan (€70M+) is an upper bound that saturation guarantees we will not reach. The honest deliverable is the ranking, the phasing and the tests — the Q3 experiments in Task 2 are what turn this allocation into a defensible Q4 forecast.
 
 ---
 
@@ -129,4 +129,4 @@ Deliberately. The model's holdout R² is 0.29 and €35M is ~2.2× beyond the sp
 
 ---
 
-*Time spent: ~1.5 hours (desk analysis of the memo + write-up). No code needed; all figures from the memo.*
+*Time spent: ~1.5 hours (part of the ~7 h project total — see the blueprint time log). All memo figures are transcribed and re-derived in analysis.ipynb §5.*

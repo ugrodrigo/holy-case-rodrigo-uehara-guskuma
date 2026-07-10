@@ -116,7 +116,7 @@ These change how the campaign windows should be read — I'd validate my reading
 7. How is `customer_id` assigned (guest checkout → null?) and why do 1,583 customers have two "first" orders?
 8. Which timestamp anchors `days_to_delivery`, and what SLA defines `is_on_time` (currently 98% False)?
 9. Is the UK store's small size real or a sampling artifact?
-10. Was there any **paid media / discount** behind the Apr 19 launch spike (34.5k orders, 6× normal)? Without spend data, campaign ROI can't be computed — only revenue uplift.
+10. Was there any **paid media / discount** behind the Apr 19 launch spike (34.5k orders — 8.5× the pre-period daily average)? Without spend data, campaign ROI can't be computed — only revenue uplift.
 
 ---
 

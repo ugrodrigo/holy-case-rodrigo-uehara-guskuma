@@ -31,9 +31,9 @@ https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis
 
 1. **The launch worked as a demand event.** Campaign net revenue ran at **+118% per day vs. the pre-period** (+57% excluding launch day). Launch day alone did ~€3.1M — 11× a pre-campaign day — and half of all campaign bottle volume. *(details [§2.1](#q1-21), [§2.4](#q1-24) · code: analysis.ipynb §3.1, §3.4)*
 2. **It was an existing-customer launch, not an acquisition launch.** Only **22.7%** of syrup-bottle orders came from first-time customers vs. 47.8% for non-syrup orders in the same window. The syrup bottle monetized the base; it did not (yet) bring new people in. *(details [§2.2](#q1-22), [further analysis §3](#fa-3) · code: analysis.ipynb §3.2, §6.3)*
-3. **DE carried it**: 74% of bottle units, 57.0% of DE campaign orders contained a bottle (FR 30.5%, UK 22.4%). FR underperformed its size (+55% revenue uplift vs. DE +192%). *(details [§2.3](#q1-23) · code: analysis.ipynb §3.1, §3.3)*
+3. **DE carried it**: 74% of bottle units, 57.0% of DE campaign orders contained a bottle (FR 30.5%, UK 22.4%). FR underperformed its size (+51% net revenue uplift vs. DE +184%). *(details [§2.3](#q1-23) · code: analysis.ipynb §3.1, §3.3)*
 4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops with delay: **14.6% (delivered ≤4 days) → 5.4% (>14 days)** raw; a truncation-corrected check puts the penalty at **roughly a fifth to a quarter lower reorder likelihood (≈1,000 lost reorders — an imprecise estimate)** ([further analysis §6](#fa-6)). It was also a **single-warehouse (POZ1) problem** — NOT1 shipped bottles on time throughout ([further analysis §4](#fa-4)). *(details [§3.3](#q1-33), [further analysis §4](#fa-4), [further analysis §6](#fa-6) · code: analysis.ipynb §3.9, §3.10, §6.4, §6.6)*
-5. **Early retention is real but shallow:** 10.1% of identifiable campaign bottle buyers re-bought syrup within ~4 weeks (median 23 days to reorder), mostly via the May 12 3er pod bundles — evidence the refill model works. No cannibalisation of the core Energy business is visible. *(details [§4.1](#q1-41), [§4.2](#q1-42) · code: analysis.ipynb §3.10, §3.11, §3.12)*
+5. **Early retention is real but shallow:** 10.1% of identifiable campaign bottle buyers re-bought syrup within the observed 4–6 week window (median 23 days to reorder), mostly via the May 12 3er pod bundles — evidence the refill model works. No cannibalisation of the core Energy business is visible. *(details [§4.1](#q1-41), [§4.2](#q1-42) · code: analysis.ipynb §3.10, §3.11, §3.12)*
 
 ---
 
@@ -75,7 +75,7 @@ https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis
 - Excluding launch day, the campaign still ran **+50% orders / +57% revenue per day** — the uplift was not just one spike. *(code: analysis.ipynb §3.1)*
 - The post-period stays ~39% above pre, but is **contaminated upward** by the May 12 3er launch, a May 18 sampling giveaway and the May 27 Summer Cocktail launch — read it as "elevated, partly for other reasons", not as pure campaign halo. *(code: +39% in analysis.ipynb §3.1; event evidence §1.5 and §3.12; all three annotated in the §4.1 chart)*
 - **Robustness:** the pre-period contains Easter (Apr 3–6) and the campaign contains May 1 — re-basing on an Easter-adjusted baseline moves the uplift only from +118% to **+114%** (+54% excl. launch day *and* May 1). Zero-revenue sample orders (11.7k in the post-period, mostly May 18) inflate post *order counts* (+33% → **+24%** when excluded) but not revenue (+39% either way). *(code: analysis.ipynb §3.1 sensitivity checks)*
-- **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. This analysis can only quantify the **demand uplift** the campaign generated; If it could be paired with the campaign's spend (media, CRM, influencer fees) it would be possible to convert these numbers into true **ROI/ROAS** — this would be the first data request I'd make to complete the launch evaluation. *(code: analysis.ipynb §3.1)*
+- **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. That same concentration implies part of the uplift is **demand pull-forward** from the base rather than net-new consumption; separating the two needs a longer horizon or a control market. This analysis can only quantify the **demand uplift** the campaign generated; If it could be paired with the campaign's spend (media, CRM, influencer fees) it would be possible to convert these numbers into true **ROI/ROAS** — this would be the first data request I'd make to complete the launch evaluation. *(code: analysis.ipynb §3.1)*
 
 <a id="q1-22"></a>
 ### 2.2 Existing vs. new customers *(code: analysis.ipynb §3.2)*
@@ -120,7 +120,7 @@ Share of net revenue by category:
 
 *\*Energy rows shown as the share of the three energy categories combined; full table in analysis.ipynb §3.5.*
 
-The syrup franchise instantly became the #1 category during the campaign — in net terms the standard-VAT bottle weighs slightly less than the food-VAT consumables, so Energy edges the bottle as the largest *single* category (20.2% vs 18.8%), but bottle + pods combined lead clearly at 34.2% — and it **retains ~13% of revenue after the campaign**, a real second leg, not a stunt. Energy's *share* dipped during the campaign but its **absolute net €/day grew** (€78.3k pre → €127.6k campaign → €106.7k post), so the dip is denominator effect, not decline (see cannibalisation, [§4.2](#q1-42)).
+The syrup franchise instantly became the #1 category during the campaign — in net terms the standard-VAT bottle weighs slightly less than the food-VAT consumables, so the **Energy Bundle** category edges the Syrup Bottle as the largest *single* category (20.2% vs 18.8%), but bottle + pods combined lead clearly at 34.2% — and it **retains ~13% of revenue after the campaign**, a real second leg, not a stunt. Energy's *share* dipped during the campaign but its **absolute net €/day grew** (€78.3k pre → €127.6k campaign → €106.7k post), so the dip is denominator effect, not decline (see cannibalisation, [§4.2](#q1-42)).
 
 ---
 
@@ -167,8 +167,8 @@ Reorder rate falls monotonically with the delay on the *first* bottle order: **1
 Of **54,127 identifiable campaign bottle buyers**:
 
 - **10.1% (5,470) re-purchased syrup by May 31** (window: 4–6 weeks); median time to reorder **23 days** — consistent with a ~3-week consumption cycle for the bundled 10er pods. *(code: analysis.ipynb §3.10)*
-- **Internal benchmark:** campaign buyers of the core Energy category re-bought energy at **11.8%** in the same window — syrup's first-cohort repeat, achieved despite the delivery crisis, lands nearly at core-category level. *(code: analysis.ipynb §3.10)*
-- What they reordered: **3er pod bundles 3,992 · bottles 2,072 · 10er pods 1,978** (overlapping). The May 12 3er launch was well-timed against the consumption cycle and immediately became the main reorder vehicle (3,365 orders on day one). *(code: analysis.ipynb §3.10, §3.12)*
+- **Internal benchmark:** campaign buyers of the core Energy category re-bought energy at **11.8%** in the same window — syrup's first-cohort repeat, achieved despite the delivery crisis, lands nearly at core-category level (identical campaign → May 31 clock, so both figures carry the same window truncation). *(code: analysis.ipynb §3.10)*
+- What they reordered: **3er pod bundles 3,992 · bottles 2,072 · 10er pods 1,978** (overlapping) — overwhelmingly **consumable refills**: the 3er is a *pod* bundle, not more hardware (naming confirmed against the product master). The May 12 3er launch was well-timed against the consumption cycle and immediately became the main reorder vehicle (3,365 orders on day one). *(code: analysis.ipynb §3.10, §3.12)*
 - 3er bundle buyers since May 12: 10,215 orders, only **9.4% first-time customers**, and **42.4% verifiably owned a bottle already** — it is functioning as a retention product, as intended. (The other ~58% may have bought bottles before Apr 1, via another channel, or are gift buyers — worth checking, and one of my interviewer questions.) *(code: analysis.ipynb §3.12)*
 - Reorder flavour ranking (Peach, Cola Ice Pop, Green Apple on top) is the first read on which refill flavours to scale. *(code: analysis.ipynb §3.12)*
 
@@ -189,7 +189,7 @@ Of **54,127 identifiable campaign bottle buyers**:
 
 **Needs improvement:**
 1. **Fulfilment readiness** — the production gap measurably burned early retention (~1,000 reorders on the corrected estimate, [further analysis §6](#fa-6)) and it was POZ1-specific ([further analysis §4](#fa-4)); late-campaign buyers had a first experience of waiting 5+ weeks.
-2. **FR performance** — 55% uplift vs DE's 191%; diagnose localisation/creator mix before H2.
+2. **FR performance** — +51% uplift vs DE's +184%; diagnose localisation/creator mix before H2.
 3. **New-customer angle** — syrup didn't acquire; consider a syrup-led acquisition offer now that the base is saturated with bottles.
 
 **Couldn't answer with this data (and what I'd need):**
@@ -197,7 +197,7 @@ Of **54,127 identifiable campaign bottle buyers**:
 - **True incrementality of launch-day demand** (pull-forward vs. net-new) → longer pre-period / prior-year baseline.
 - **Retention beyond 4–6 weeks & pods consumption rate** → June+ orders; subscription data if any.
 - **Margin** impact of the bundle discount → COGS/discount data (net revenue in the extract is unreliable — see data review).
-- Whether **delivery-delay victims** should get a win-back voucher (I'd A/B it — the 15k customers who waited >14 days are a named, reachable audience).
+- Whether **delivery-delay victims** should get a win-back voucher (I'd A/B it — the ~15.8k identifiable customers who waited >14 days are a named, reachable audience).
 
 ---
 
@@ -207,7 +207,7 @@ Seven additional analyses that sharpen — and in one case revise — the findin
 
 ---
 
-*Time spent: ~4.5 hours end-to-end (data audit, analysis, charts, write-up, further analyses), with the analysis fully scripted in Python/pandas for reproducibility.*
+*Time spent: ~5 hours on Q1 (audit, analysis, charts, further analyses, write-up). Project total including Q2, the re-runs on Martijn's additional info and the adversarial self-review: ~7 h — full time log in the project blueprint. Fully scripted in Python/pandas for reproducibility.*
 
 
 ---
@@ -246,7 +246,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 |---|---|---|---|---|
 | **Paid Social** | €5.9M | **€17.0M** | +186% | Largest share; least-bad saturation profile. META €10.0M (workhorse, mROI ~1 → run to breakeven), TikTok €5.5M (momentum, front-scale but gated by the Aug stress test), YouTube paid €1.5M (scaling test of the "37× iROAS" signal — treated as unproven, capped, staged) |
 | **Influencer** | €7.0M | **€9.6M** | +37% | Forced above optimal by the budget constraint. Mix shift: YouTube Inf. share cut from ~50% toward Podcast / TikTok Inf. / Instagram (mROI 0.5–0.8); renegotiate or exit floor-driven contracts; whitelisting/paid-amplification bridges Influencer → Paid Social |
-| **Google Search** | €0.15M | **€1.0M** | ~6.7× | Highest mROI, tiny base. Phase: 2× run-rate in Q3 (the memo's controlled test), scale to plan in Q4 only if the brand-keyword holdout confirms incrementality |
+| **Google Search** | €0.15M | **€1.0M** | ~6.7× | Highest mROI, tiny base. Phase: 2× run-rate in Q3 (the memo's controlled test), scale to plan in Q4 only if the brand-keyword holdout confirms incrementality. Note: the memo's Google mROI (4.46) *exceeds* its average iROAS (4.09) — increasing marginal returns are atypical for an ad channel and smell like a small-base/attribution artifact; one more reason the scale-up is gated |
 | **Affiliate** | €0.46M | **€0.9M** | ~2× | mROI 1.78; scale moderately; audit coupon-poaching first |
 | **Testing & flex reserve** | — | **€2.5M** | — | Funds incrementality tests + Q4 reallocation into validated winners (likely destinations: TikTok scale-up, Google, or promo support in Black Week) |
 | **Performance subtotal** | €13.5M | **€31.0M** | | |
@@ -278,7 +278,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 
 ### 1.5 Why this plan carries no point revenue projection
 
-Deliberately. The model's holdout R² is 0.29 and €35M is ~2.2× beyond the spend range it was fitted on — any point forecast would be false precision. Directional bounds only: the outcome should not sit *below* the memo's €57M projection (media effects are constrained non-negative, and we spend strictly more), while a naive linear extrapolation of the memo's plan (€70M+) is an upper bound that saturation guarantees we will not reach. The honest deliverable is the ranking, the phasing and the tests — the Q3 experiments in Task 2 are what turn this allocation into a defensible Q4 forecast.
+Deliberately. The model's holdout R² is 0.29, and €35M per half is ~3.5× the average half-year media spend in its 125-week training window (€48M total) — H1 itself already ran ~1.8× above that long-run average — so a point forecast would extrapolate far outside fitted territory with false precision. Directional bounds only: the outcome should not sit *below* the memo's €57M projection (media effects are constrained non-negative, and we spend strictly more), while a naive linear extrapolation of the memo's plan (€70M+) is an upper bound that saturation guarantees we will not reach. The honest deliverable is the ranking, the phasing and the tests — the Q3 experiments in Task 2 are what turn this allocation into a defensible Q4 forecast.
 
 ---
 
@@ -344,7 +344,7 @@ Deliberately. The model's holdout R² is 0.29 and €35M is ~2.2× beyond the sp
 
 ---
 
-*Time spent: ~1.5 hours (desk analysis of the memo + write-up). No code needed; all figures from the memo.*
+*Time spent: ~1.5 hours (part of the ~7 h project total — see the blueprint time log). All memo figures are transcribed and re-derived in analysis.ipynb §5.*
 
 
 ---
