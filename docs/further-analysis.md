@@ -4,7 +4,7 @@
 
 <a id="fa-1"></a>
 ## 1. Refunds & cancellations *(code: analysis.ipynb §6.1)*
-Under the cancellation rule provided by Martijn (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
+Under the cancellation rule provided by Martijn (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders in the campaign window — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
 
 <a id="fa-2"></a>
 ## 2. The May 18 sampling giveaway barely converted *(code: analysis.ipynb §6.2)*
@@ -16,7 +16,7 @@ Fixed 21-day repeat window: campaign new customers **with** a bottle repeat at *
 
 <a id="fa-4"></a>
 ## 4. The production gap was a single-warehouse problem *(code: analysis.ipynb §6.4)*
-Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix. Before relying on cross-shipping from NOT1 in future launches, verify that its clean record reflects spare capacity rather than simply the UK's lower volume.
+Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. One structural caveat: **NOT1 fulfils only UK orders and POZ1 fulfils DE/FR**, so warehouse and market are fully confounded — "POZ1 problem" and "DE/FR problem" are the same statement in this data. The ops recommendation still sharpens from "fix production planning" to an EU/POZ1 stock-allocation fix, but attributing NOT1's clean record to warehouse operations (rather than separate UK stock allocation or its far lower volume, 5% of bottles) needs ops input before relying on cross-shipping in future launches.
 
 <a id="fa-5"></a>
 ## 5. The launch re-activated dormant customers — and they stayed active *(code: analysis.ipynb §6.5)*

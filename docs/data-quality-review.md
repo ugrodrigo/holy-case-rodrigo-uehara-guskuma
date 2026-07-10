@@ -13,7 +13,7 @@ Issues are grouped by severity, and each one ends with the **question I would as
 Three of the questions below have been answered; the analysis was re-run under the confirmed rules (every headline conclusion held, shifts ≤ 0.2pp):
 
 1. **Revenue definitions (→ §2.4, resolved):** `gross_revenue` = SUM(item gross), item-level only. `net_revenue` = SUM(item gross) + `shipping_revenue` − `refunded_value` − total tax. This explains both the net > gross rows (shipping) and the negative-net rows (refunds); implied tax rates match VAT by market (code: analysis.ipynb §1.1). Per Martijn's follow-up guidance, the analysis uses **net revenue** as the money metric (it is what marketing steers on); gross appears only in this audit.
-2. **Cancellations (→ §2.3, resolved):** a cancelled order is `refunded_value ≥ gross_revenue`. Applied with a `gross > 0` guard (zero-value sample orders trivially satisfy the rule); 838 orders excluded. One consequence: the further-analysis cancellation finding flipped — bottle orders almost never cancel (0.02%), confirming the "cancelled" shipment rows were replacement re-shipments. Note: applying the rule still leaves **61 orders** (of ~344k) with slightly negative net — refunds exceeding gross + shipping − tax — treated as partial-refund edge cases; worth confirming whether the intended threshold is gross alone or gross + shipping.
+2. **Cancellations (→ §2.3, resolved):** a cancelled order is `refunded_value ≥ gross_revenue`. Applied with a `gross > 0` guard (zero-value sample orders trivially satisfy the rule); 838 orders excluded. One consequence: the further-analysis cancellation finding flipped — bottle orders almost never cancel (0.02%), confirming the "cancelled" shipment rows were replacement re-shipments. Note: applying the rule still leaves **61 orders** (of ~344k) with slightly negative net — refunds exceeding gross + shipping − tax — treated as partial-refund edge cases; worth confirming whether the intended threshold is gross alone or gross + shipping. (Decomposition: 45 of the 61 stay negative even applying the rule verbatim with no guard; the other 16 are zero-gross orders carrying a refund, which the guard deliberately keeps in scope — so "no negative revenue when the filter is applied correctly" does not exactly hold on this extract, most plausibly a shipping-refund edge case.)
 3. **Mystery SKUs (→ §2.7, resolved):** all `10-00-42-002x` SKUs are spare parts (replacements) for the syrup bottle, intentionally absent from the product master — excluded from the analysis entirely.
 
 ---
@@ -85,7 +85,7 @@ Top offenders:
 
 ### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code: analysis.ipynb §1.1)*
 - 3,450 orders have **no `customer_id`** — these can never appear in reorder/retention metrics.
-- **1,583 customers have more than one order flagged `is_first_order = TRUE`.**
+- **Corrected on re-review:** an earlier version of this audit reported 1,583 customers with more than one `is_first_order = TRUE` order — that was a computation artifact (null `customer_id`s counted as duplicates of one another, plus the 500 duplicated rows). The true count is 202 on the raw file, **all of them explained by the duplicated order rows — after dedupe, no customer carries two "first" orders.** The flag itself is clean.
 - 10,137 orders are `is_first_order=TRUE` but `is_first_paid_order=FALSE` (plausible if the first order was free), yet 1,211 are the reverse — `is_first_order=FALSE` but `is_first_paid_order=TRUE` *and* that combination is hard to explain if flags are computed consistently.
 
 **Ask:** how is customer identity resolved (email? account?), and are the first-order flags computed per shop or globally? Guest checkout = null customer_id?
@@ -99,7 +99,7 @@ These change how the campaign windows should be read — I'd validate my reading
 1. **May 18 spike:** 9,965 orders, but 55.7% have **zero gross revenue**, AOV €31, **72.3% first-time customers**, dominated by free Logo Shakers and Mixed Sachet Boxes. Looks like a **lead-gen / sampling giveaway**. It also coincides with a large wave of *re-shipments*. It inflates "orders" and depresses AOV and the new-customer quality picture for the post-period. → *Confirmed promo? Should zero-revenue orders be excluded from KPIs?*
 2. **May 27 spike:** 12,159 orders, AOV €104 — driven by a **"Summer Cocktail 2026" launch** (ice cube trays, beach towels, cocktail-flavour tubs). A separate campaign that contaminates any "post-syrup-campaign baseline". → *Confirm so post-period comparisons can exclude it.*
 3. **14,082 zero-gross orders overall** (only 87 of them cancelled) — freebies, replacements, or 100% discount codes?
-4. **Pre-launch syrup sales:** 2 bottle orders and 2 pod orders dated Apr 16–18, before the Apr 19 launch (test orders? employees? early unlock?). Similarly, **155 zero-revenue 3er-bundle rows appear from Apr 19 onward**, before the official May 12 launch — they look like seeded samples/influencer sends. The brief's "count 3er as reorders" rule is unaffected (real sales clearly start May 12: 3,374 orders that day), but the early zero-value rows should be excluded from revenue.
+4. **Pre-launch syrup sales:** 2 bottle orders and 2 pod orders dated Apr 16–18, before the Apr 19 launch (test orders? employees? early unlock?). Similarly, **155 zero-revenue 3er-bundle rows appear from Apr 19 onward**, before the official May 12 launch — they look like seeded samples/influencer sends. The brief's "count 3er as reorders" rule is unaffected (real sales clearly start May 12: 3,374 orders that day in the raw file; 3,365 after the cleaning rules), but the early zero-value rows should be excluded from revenue.
 5. **UK store is much smaller** (36k orders vs DE 177k / FR 132k) — sampled differently, or genuinely small market? Affects per-market conclusions.
 6. **50,560 deliveries dated after May 31** (up to Jun 21) — expected, since late-May orders deliver in June; just note the shipment file has a longer horizon than the order file.
 
@@ -113,7 +113,7 @@ These change how the campaign windows should be read — I'd validate my reading
 4. What are the **May 18** (zero-revenue sampling?) and **May 27** (Summer Cocktail launch) events, and should they be excluded from post-campaign baselines?
 5. ✅ *Answered (§0):* `10-00-42-002x` are syrup-bottle spare parts; excluded.
 6. Is the 3er bundle **pods or bottles**? (Brief and product master disagree.)
-7. How is `customer_id` assigned (guest checkout → null?) and why do 1,583 customers have two "first" orders?
+7. How is `customer_id` assigned (guest checkout → null?) — 3,450 orders have no id and can never appear in retention metrics.
 8. Which timestamp anchors `days_to_delivery`, and what SLA defines `is_on_time` (currently 98% False)?
 9. Is the UK store's small size real or a sampling artifact?
 10. Was there any **paid media / discount** behind the Apr 19 launch spike (34.5k orders — 8.5× the pre-period daily average)? Without spend data, campaign ROI can't be computed — only revenue uplift.
@@ -127,7 +127,7 @@ These change how the campaign windows should be read — I'd validate my reading
 | Dedupe `orders` on `order_id` (keep first) | −500 |
 | Drop order_items with order IDs not in `orders` | −200 |
 | Exclude cancelled orders — rule provided by Martijn: `refunded_value ≥ gross_revenue` (guarded to gross > 0) | −838 |
-| Drop `10-00-42-002x` spare-part line items (per Martijn: out of scope) | −7,296 item rows |
+| Drop `10-00-42-002x` spare-part line items (per Martijn: out of scope) | −7,294 item rows (7,296 in the raw file; 2 sit on already-dropped orphan orders) |
 | Use **net revenue** for all monetary metrics (additional info provided by Martijn; gross used during the audit phase) | — |
 | Compute delivery delay as `delivered_at − order_date` (first delivered shipment) | — |
 | Retention restricted to orders with a `customer_id` | 54,127 of 55,982 bottle buyers identifiable |
