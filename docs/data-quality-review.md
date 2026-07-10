@@ -8,6 +8,16 @@ Issues are grouped by severity, and each one ends with the **question I would as
 
 ---
 
+## 0. Update — answers received from the data owner
+
+Three of the questions below have been answered; the analysis was re-run under the confirmed rules (every headline conclusion held, shifts ≤ 0.2pp):
+
+1. **Revenue definitions (→ §2.4, resolved):** `gross_revenue` = SUM(item gross), item-level only. `net_revenue` = SUM(item gross) + `shipping_revenue` − `refunded_value` − total tax. This explains both the net > gross rows (shipping) and the negative-net rows (refunds); implied tax rates match VAT by market (code: analysis.ipynb §1.1). Per the data owner's follow-up guidance, the analysis uses **net revenue** as the money metric (it is what marketing steers on); gross appears only in this audit.
+2. **Cancellations (→ §2.3, resolved):** a cancelled order is `refunded_value ≥ gross_revenue`. Applied with a `gross > 0` guard (zero-value sample orders trivially satisfy the rule); 838 orders excluded. One consequence: the further-analysis cancellation finding flipped — bottle orders almost never cancel (0.02%), confirming the "cancelled" shipment rows were replacement re-shipments.
+3. **Mystery SKUs (→ §2.7, resolved):** all `10-00-42-002x` SKUs are spare parts (replacements) for the syrup bottle, intentionally absent from the product master — excluded from the analysis entirely.
+
+---
+
 ## 1. Schema mismatches vs. the case definition (ask first — cheap to clarify)
 
 The files do not match the schemas described in the case brief:
@@ -41,8 +51,8 @@ The files do not match the schemas described in the case brief:
 - `shipments.csv` has 366,218 rows for ~345k orders: **21,555 orders have 2–4 shipment rows** (typical pattern: shipped → cancelled → shipped again weeks later). Naively joining shipments to orders double-counts and mixes up delivery dates.
 - 1,545 orders have *only* cancelled/ignored shipment rows (my proxy for a cancelled order); 270 orders have no shipment row at all.
 
-**Handling:** used the *first delivered* shipment per order for delay analysis; flagged orders whose every shipment row is cancelled as "cancelled" and excluded them.
-**Ask:** what is the correct definition of a cancelled order? And do multiple shipment rows mean split shipments, replacements, or subscription-like repeat deliveries? (Many orders show two *successful* deliveries ~3–4 weeks apart, e.g. shipped Apr 23 and again May 18 — replacement shipments for the syrup production gap?)
+**Handling:** used the *first delivered* shipment per order for delay analysis.
+**Ask:** ~~what is the correct definition of a cancelled order?~~ **Answered — `refunded_value ≥ gross_revenue` (see §0); now applied.** Still open: do multiple shipment rows mean split shipments, replacements, or subscription-like repeat deliveries? (Many orders show two *successful* deliveries ~3–4 weeks apart — the near-zero cancellation rate on bottle orders supports the replacement-shipment reading.)
 
 ### 2.4 Inconsistent net/gross revenue definitions in `orders.csv` *(code: analysis.ipynb §1.1, §1.2)*
 - **37,098 orders (10.8%) have `net_revenue` > `gross_revenue`.** In these rows `net_revenue ≈ gross_revenue + shipping_revenue` exactly — i.e. net *includes* shipping while gross excludes it, unlike all other rows.
@@ -50,7 +60,7 @@ The files do not match the schemas described in the case brief:
 - Net/gross ratios are otherwise VAT-coherent (UK ≈ 1/1.20; DE mixes 7% food / 19% standard; FR mixes 5.5% / 20%), which confirms the general logic is right but the shipping treatment is inconsistent.
 - Sum of `order_items.net_revenue` fails to reconcile with `orders.net_revenue` for **12.3% of orders** (gross reconciles almost perfectly: 149 mismatches).
 
-**Handling:** I ran the whole analysis on **gross revenue**, which is internally consistent. **Ask:** what exactly is `net_revenue` net *of* (VAT? discounts? shipping in or out?), and why does it flip sign/definition on a subset of orders?
+**Handling:** the audit-phase analysis ran on **gross revenue** (net looked inconsistent); once the definition was confirmed, the final analysis was switched to **net revenue** per the data owner's guidance. **Ask:** ~~what exactly is `net_revenue` net of?~~ **Answered — `net = SUM(item gross) + shipping − refunded − tax` (see §0); the "flips" were shipping and refunds, not an inconsistency.**
 
 ### 2.5 5,490 order-item rows with negative `net_revenue` but positive `gross_revenue` *(code: analysis.ipynb §1.2)*
 Including rows like gross €9.03 / net −€16.84. Possibly discount over-allocation on bundle decomposition. **Handling:** gross used throughout. **Ask:** is bundle discount allocation known to over-assign discounts to low-price components?
@@ -71,7 +81,7 @@ Top offenders:
 | `NOSYNC` | 144 | Placeholder; zero revenue; also flagged `is_bundle=True` with itself as component |
 | `drako-1`, `raptor-1`, `syru-1` | 17 | Lowercase free-text SKUs that look like manually keyed syrup bottles ("drako" vs product name "Darko") |
 
-**Handling:** kept the rows (they carry real revenue) but they fall out of any category-level view. **Ask:** what is `10-00-42-0020`, and should the free-text/malformed SKUs be mapped back to real products?
+**Handling:** initially kept; now **excluded** per the data owner. **Ask:** ~~what is `10-00-42-0020`?~~ **Answered — `10-00-42-002x` are syrup-bottle spare parts, out of scope (see §0).** Still open: should the free-text/malformed SKUs (`drako-1`, `11-00-01-0043-01-1`, …) be mapped back to real products?
 
 ### 2.8 Customer identity problems (breaks retention analysis at the margin) *(code: analysis.ipynb §1.1)*
 - 3,450 orders have **no `customer_id`** — these can never appear in reorder/retention metrics.
@@ -97,11 +107,11 @@ These change how the campaign windows should be read — I'd validate my reading
 
 ## 4. Summary — top questions for the interviewer
 
-1. What is `net_revenue` net of, and why does its definition flip (shipping included) for ~11% of orders? Which revenue field should steer the business?
-2. How should a **cancelled order** be identified given there is no `is_cancelled` column?
+1. ✅ *Answered (§0).* ~~What is `net_revenue` net of, and why does its definition flip for ~11% of orders?~~
+2. ✅ *Answered (§0):* cancelled = `refunded_value ≥ gross_revenue`.
 3. Do multiple shipment rows per order represent **split shipments or replacements** (esp. the Apr→May re-ship wave around the syrup production gap)?
 4. What are the **May 18** (zero-revenue sampling?) and **May 27** (Summer Cocktail launch) events, and should they be excluded from post-campaign baselines?
-5. What is SKU **`10-00-42-0020`** (7k units, syrup range, missing from product master)?
+5. ✅ *Answered (§0):* `10-00-42-002x` are syrup-bottle spare parts; excluded.
 6. Is the 3er bundle **pods or bottles**? (Brief and product master disagree.)
 7. How is `customer_id` assigned (guest checkout → null?) and why do 1,583 customers have two "first" orders?
 8. Which timestamp anchors `days_to_delivery`, and what SLA defines `is_on_time` (currently 98% False)?
@@ -116,7 +126,8 @@ These change how the campaign windows should be read — I'd validate my reading
 |---|---|
 | Dedupe `orders` on `order_id` (keep first) | −500 |
 | Drop order_items with order IDs not in `orders` | −200 |
-| Exclude orders whose shipment rows are all cancelled/ignored | −1,545 |
-| Use **gross revenue** for all monetary metrics | — |
+| Exclude cancelled orders — data-owner rule: `refunded_value ≥ gross_revenue` (guarded to gross > 0) | −838 |
+| Drop `10-00-42-002x` spare-part line items (data owner: out of scope) | −7,296 item rows |
+| Use **net revenue** for all monetary metrics (data-owner guidance; gross used during the audit phase) | — |
 | Compute delivery delay as `delivered_at − order_date` (first delivered shipment) | — |
-| Retention restricted to orders with a `customer_id` | 53,738 of 55,487 bottle buyers identifiable |
+| Retention restricted to orders with a `customer_id` | 54,127 of 55,982 bottle buyers identifiable |

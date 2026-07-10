@@ -1,8 +1,8 @@
 # Q1 — 5th BURRsday Syrup Campaign: Launch Analysis
 
-*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are gross revenue and should be read as **relative** comparisons, per the dataset disclaimer.*
+*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are **net revenue** (the data owner's steering metric: item revenue + shipping − refunds − tax) and should be read as **relative** comparisons, per the dataset disclaimer.*
 
-> **Data prep:** duplicate orders deduped, fully-cancelled orders excluded, orphan line items dropped, delivery delay computed as `delivered_at − order_date`. Details and open data questions in [data-quality-review.md](data-quality-review.md).
+> **Data prep:** duplicate orders deduped, cancelled orders excluded (data-owner rule: `refunded_value ≥ gross_revenue`), orphan line items and `10-00-42-002x` spare-part items dropped, delivery delay computed as `delivered_at − order_date`. Details, open questions and the data owner's answers in [data-quality-review.md](data-quality-review.md).
 >
 > **Code:** every number in this document is produced by **analysis.ipynb** (in the repository, rendered with outputs on GitHub). Each section below carries a *(code: analysis.ipynb §…)* tag naming the analysis.ipynb section that computes it; the data-cleaning rules are in analysis.ipynb §2.
 
@@ -10,10 +10,10 @@
 
 ## TL;DR — the five things to know
 
-1. **The launch worked as a demand event.** Campaign revenue ran at **+124% per day vs. the pre-period** (+60% excluding launch day). Launch day alone did ~€3.4M — 6× a normal day — and half of all campaign bottle volume. *(details [§2.1](#q1-21), [§2.4](#q1-24) · code: analysis.ipynb §3.1, §3.4)*
-2. **It was an existing-customer launch, not an acquisition launch.** Only **22.9%** of syrup-bottle orders came from first-time customers vs. 47.9% for non-syrup orders in the same window. The syrup bottle monetized the base; it did not (yet) bring new people in. *(details [§2.2](#q1-22), [§5.3](#q1-53) · code: analysis.ipynb §3.2, §6.3)*
-3. **DE carried it**: 74% of bottle units, 56.8% of DE campaign orders contained a bottle (FR 30.3%, UK 22.3%). FR underperformed its size (+55% revenue uplift vs. DE +191%). *(details [§2.3](#q1-23) · code: analysis.ipynb §3.1, §3.3)*
-4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops with delay: **14.5% (delivered ≤4 days) → 5.4% (>14 days)** raw; after correcting for calendar truncation the causal penalty is **~25% lower reorder likelihood, ≈1,000 lost reorders** ([§5.6](#q1-56)). It was also a **single-warehouse (POZ1) problem** — NOT1 shipped bottles on time throughout ([§5.4](#q1-54)). *(details [§3.3](#q1-33), [§5.4](#q1-54), [§5.6](#q1-56) · code: analysis.ipynb §3.9, §3.10, §6.4, §6.6)*
+1. **The launch worked as a demand event.** Campaign net revenue ran at **+118% per day vs. the pre-period** (+57% excluding launch day). Launch day alone did ~€3.1M — 11× a pre-campaign day — and half of all campaign bottle volume. *(details [§2.1](#q1-21), [§2.4](#q1-24) · code: analysis.ipynb §3.1, §3.4)*
+2. **It was an existing-customer launch, not an acquisition launch.** Only **22.7%** of syrup-bottle orders came from first-time customers vs. 47.8% for non-syrup orders in the same window. The syrup bottle monetized the base; it did not (yet) bring new people in. *(details [§2.2](#q1-22), [further analysis §3](further-analysis.md#fa-3) · code: analysis.ipynb §3.2, §6.3)*
+3. **DE carried it**: 74% of bottle units, 57.0% of DE campaign orders contained a bottle (FR 30.5%, UK 22.4%). FR underperformed its size (+55% revenue uplift vs. DE +192%). *(details [§2.3](#q1-23) · code: analysis.ipynb §3.1, §3.3)*
+4. **The production gap was expensive.** Bottle orders placed in weeks 18–19 waited a **median 38–40 days** for delivery. Reorder rate drops with delay: **14.6% (delivered ≤4 days) → 5.4% (>14 days)** raw; after correcting for calendar truncation the causal penalty is **~24% lower reorder likelihood, ≈1,000 lost reorders** ([further analysis §6](further-analysis.md#fa-6)). It was also a **single-warehouse (POZ1) problem** — NOT1 shipped bottles on time throughout ([further analysis §4](further-analysis.md#fa-4)). *(details [§3.3](#q1-33), [further analysis §4](further-analysis.md#fa-4), [further analysis §6](further-analysis.md#fa-6) · code: analysis.ipynb §3.9, §3.10, §6.4, §6.6)*
 5. **Early retention is real but shallow:** 10.1% of identifiable campaign bottle buyers re-bought syrup within ~4 weeks (median 23 days to reorder), mostly via the May 12 3er pod bundles — evidence the refill model works. No cannibalisation of the core Energy business is visible. *(details [§4.1](#q1-41), [§4.2](#q1-42) · code: analysis.ipynb §3.10, §3.11, §3.12)*
 
 ---
@@ -45,23 +45,23 @@
 <a id="q1-21"></a>
 ### 2.1 Baseline & uplift *(code: analysis.ipynb §3.1)*
 
-![Daily gross revenue](../charts/daily_revenue.png)
+![Daily net revenue](../charts/daily_revenue.png)
 
-| Period | Days | Orders/day | Gross €/day | AOV | First-order share |
+| Period | Days | Orders/day | Net €/day | AOV (net) | First-order share |
 |---|---|---|---|---|---|
-| Pre (Apr 1–18) | 18 | 4,046 | €287k | €70.9 | 46.9% |
-| **Campaign (Apr 19–May 4)** | 16 | **7,798 (+93%)** | **€641k (+124%)** | **€82.3 (+16%)** | 36.8% |
-| Post (May 5–31) | 27 | 5,383 (+33%) | €402k (+40%) | €74.7 | 40.8% |
+| Pre (Apr 1–18) | 18 | 4,045 | €268k | €66.2 | 46.9% |
+| **Campaign (Apr 19–May 4)** | 16 | **7,828 (+94%)** | **€585k (+118%)** | **€74.7 (+13%)** | 36.6% |
+| Post (May 5–31) | 27 | 5,392 (+33%) | €372k (+39%) | €69.1 | 40.7% |
 
-- Excluding launch day, the campaign still ran **+49% orders / +60% revenue per day** — the uplift was not just one spike. *(code: analysis.ipynb §3.1)*
-- The post-period stays ~40% above pre, but is **contaminated upward** by the May 12 3er launch, a May 18 sampling giveaway and the May 27 Summer Cocktail launch — read it as "elevated, partly for other reasons", not as pure campaign halo. *(code: +40% in analysis.ipynb §3.1; event evidence §1.5 and §3.12; all three annotated in the §4.1 chart)*
+- Excluding launch day, the campaign still ran **+50% orders / +57% revenue per day** — the uplift was not just one spike. *(code: analysis.ipynb §3.1)*
+- The post-period stays ~39% above pre, but is **contaminated upward** by the May 12 3er launch, a May 18 sampling giveaway and the May 27 Summer Cocktail launch — read it as "elevated, partly for other reasons", not as pure campaign halo. *(code: +40% in analysis.ipynb §3.1; event evidence §1.5 and §3.12; all three annotated in the §4.1 chart)*
 - **Interpretation (hypothesis):** launch-day concentration (28% of campaign orders in one day) points to a well-primed audience — likely CRM/community activation. This analysis can only quantify the **demand uplift** the campaign generated; If it could be paired with the campaign's spend (media, CRM, influencer fees) it would be possible to convert these numbers into true **ROI/ROAS** — this would be the first data request I'd make to complete the launch evaluation. *(code: analysis.ipynb §3.1)*
 
 <a id="q1-22"></a>
 ### 2.2 Existing vs. new customers *(code: analysis.ipynb §3.2)*
 
-- Campaign first-order share **fell** to 36.8% (pre: 46.9%) — the extra demand was disproportionately **existing customers**. *(code: analysis.ipynb §3.2)*
-- Bottle orders: **22.9% new** vs. 47.9% for non-bottle orders in the campaign window. *(code: analysis.ipynb §3.2)*
+- Campaign first-order share **fell** to 36.6% (pre: 46.9%) — the extra demand was disproportionately **existing customers**. *(code: analysis.ipynb §3.2)*
+- Bottle orders: **22.7% new** vs. 47.8% for non-bottle orders in the campaign window. *(code: analysis.ipynb §3.2)*
 - **What the data shows:** the syrup launch activated the base. **My interpretation:** that's the right sequencing for a new format (fans forgive teething problems), but H2 needs an acquisition angle for syrup — currently it doesn't pull new customers. *(code: analysis.ipynb §3.2, §6.3)*
 
 <a id="q1-23"></a>
@@ -69,37 +69,37 @@
 
 ![Market breakdown](../charts/market_breakdown.png)
 
-| Market | Revenue uplift (campaign vs pre, €/day) | Bottle units share | Bottle penetration of campaign orders |
+| Market | Net revenue uplift (campaign vs pre, €/day) | Bottle units share | Bottle penetration of campaign orders |
 |---|---|---|---|
-| DE | **+191%** | 74% | 56.8% |
-| UK | +109% | 5% | 22.3% |
-| FR | **+55%** | 21% | 30.3% |
+| DE | **+184%** | 74% | 57.0% |
+| UK | +107% | 5% | 22.4% |
+| FR | **+51%** | 21% | 30.5% |
 
-FR is the underperformer relative to its base size (FR is ~40% of pre-period revenue but took only 21% of bottle units). Hypotheses to check with the team: weaker localisation/creator support, price sensitivity, or the campaign being DE-centric by design.
+FR is the underperformer relative to its base size (FR is ~44% of pre-period net revenue but took only 21% of bottle units). Hypotheses to check with the team: weaker localisation/creator support, price sensitivity, or the campaign being DE-centric by design.
 
 <a id="q1-24"></a>
 ### 2.4 Daily trend *(code: analysis.ipynb §3.4)*
 
 ![Daily bottle units](../charts/daily_bottles.png)
 
-Launch day sold **31,594 bottles — 50% of total campaign bottle volume** — then decayed to a steady ~1,000–1,600/day for the rest of the campaign, settling at ~400–900/day post-campaign with a clear bump on May 12 (3er launch). The demand curve is a classic hype-then-baseline launch; the post-campaign bottle baseline (~500/day) is the number to plan production against.
+Launch day sold **31,723 bottles — 50% of total campaign bottle volume** — then decayed to a steady ~1,000–1,600/day for the rest of the campaign (tail average ~1,430/day), settling at ~720/day on average post-campaign with a clear bump on May 12 (3er launch). The demand curve is a classic hype-then-baseline launch; the late-May run-rate (~500–600 bottles/day) is the number to plan production against.
 
 <a id="q1-25"></a>
 ### 2.5 Category mix *(code: analysis.ipynb §3.5)*
 
-Share of gross revenue by category:
+Share of net revenue by category:
 
 | Category | Pre | Campaign | Post |
 |---|---|---|---|
-| Syrup Bottle + Syrup Bundle (pods) | 0% | **35.0%** | 13.8% |
-| Energy (bundle + sachet + box) | 29.5%* | 21.5% | 28.6%* |
-| Mixed Sachetbox | 27.3% | 14.5% | 17.2% |
-| Hydration Bundle | 15.1% | 10.3% | 14.2% |
-| Iced Tea Bundle | 12.2% | 8.7% | 10.8% |
+| Syrup Bottle + Syrup Bundle (pods) | 0% | **34.2%** | 13.4% |
+| Energy (bundle + sachet + box) | 29.2%* | 21.8% | 28.6%* |
+| Mixed Sachetbox | 27.3% | 14.7% | 17.3% |
+| Hydration Bundle | 15.3% | 10.5% | 14.3% |
+| Iced Tea Bundle | 12.3% | 9.0% | 11.0% |
 
 *\*Energy rows shown as the share of the three energy categories combined; full table in the analysis script output.*
 
-Syrup instantly became the #1 category during the campaign, and **retains ~14% of revenue after it** — a real second leg, not a stunt. Energy's *share* dipped during the campaign but its **absolute €/day grew** (€84.6k pre → €137.8k campaign → €115.2k post), so the dip is denominator effect, not decline (see cannibalisation, [§4.2](#q1-42)).
+The syrup franchise instantly became the #1 category during the campaign — in net terms the standard-VAT bottle weighs slightly less than the food-VAT consumables, so Energy edges the bottle as the largest *single* category (20.2% vs 18.8%), but bottle + pods combined lead clearly at 34.2% — and it **retains ~13% of revenue after the campaign**, a real second leg, not a stunt. Energy's *share* dipped during the campaign but its **absolute net €/day grew** (€78.3k pre → €127.6k campaign → €106.7k post), so the dip is denominator effect, not decline (see cannibalisation, [§4.2](#q1-42)).
 
 ---
 
@@ -108,11 +108,11 @@ Syrup instantly became the #1 category during the campaign, and **retains ~14% o
 <a id="q1-31"></a>
 ### 3.1 Adoption & buying behaviour *(code: analysis.ipynb §3.6, §3.7)*
 
-- **44.5% of all campaign orders (55,487 of 124,767) contained a syrup bottle**; 62,836 bottles sold in 16 days. *(code: analysis.ipynb §3.6)*
+- **44.7% of all campaign orders (55,982 of 125,252) contained a syrup bottle**; 63,356 bottles sold in 16 days. *(code: analysis.ipynb §3.6)*
 - Flavour split: **Darko 49% · Syru 34% · Raptor 17%** — consistent enough that no flavour flopped, skewed enough to plan production toward Darko. *(code: analysis.ipynb §3.6)*
-- **Every bottle was sold as part of a bundle** (100% `is_bundle`), with a **99.8% pods attach rate** and 81% sticker attach: the hero offer was clearly *bottle + 10er pods (+ sticker)*, and standalone bottle sales were effectively not a thing. Only 93 pod packs were sold without a bottle during the campaign. *(code: analysis.ipynb §3.6)*
+- **Every bottle was sold as part of a bundle** (100% `is_bundle`), with a **99.8% pods attach rate** and 81% sticker attach: the hero offer was clearly *bottle + 10er pods (+ sticker)*, and standalone bottle sales were effectively not a thing. Only 94 pod packs were sold without a bottle during the campaign. *(code: analysis.ipynb §3.6)*
 - 88% of bottle orders took exactly one bottle (mean 1.13) — one bottle per household; multi-bottle gifting didn't materialize. *(code: analysis.ipynb §3.7)*
-- **Bottle orders spend more:** AOV €91.7 vs €74.7 for campaign non-bottle orders (+23%). *(code: analysis.ipynb §3.7)*
+- **Bottle orders spend more:** AOV (net) €81.3 vs €69.4 for campaign non-bottle orders (+17%; the premium is larger in gross terms, +23% — the bottle is standard-VAT hardware while consumables carry food VAT). *(code: analysis.ipynb §3.7)*
 
 <a id="q1-32"></a>
 ### 3.2 Cross-purchase *(code: analysis.ipynb §3.8)*
@@ -126,15 +126,15 @@ Bottle orders were dramatically slower than the rest of the shop:
 
 | | Median delay | % > 7 days | % > 14 days |
 |---|---|---|---|
-| Campaign bottle orders | **8 days** | **52.1%** | **29.8%** |
+| Campaign bottle orders | **8 days** | **51.6%** | **29.5%** |
 | Campaign non-bottle orders | 4 days | 14.7% | 0.7% |
 
 By order week, bottle orders placed in **weeks 18–19 (Apr 27 – May 10) waited a median 38–40 days** — the production gap hit customers who ordered late in the campaign; service recovered to ~5 days by week 20.
 
 ![Delay vs reorder](../charts/delay_vs_reorder.png)
 
-Reorder rate falls monotonically with the delay on the *first* bottle order: **14.5% → 11.0% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, the naive estimate is **~2,400 lost reorder customers (~4.5pp of cohort retention)**.
-*Correction (see [§5.6](#q1-56)):* part of this gradient is calendar truncation — late-delivered customers had fewer days left to reorder before the data ends. A fixed 21-day-after-delivery window puts the **causal penalty at ~25% lower reorder likelihood, ≈1,000 lost reorders**. Still material, about half the naive read.
+Reorder rate falls monotonically with the delay on the *first* bottle order: **14.6% → 11.1% → 9.7% → 5.4%**. Holding the ≤4-day rate as the counterfactual, the naive estimate is **~2,400 lost reorder customers (~4.4pp of cohort retention)**.
+*Correction (see [further analysis §6](further-analysis.md#fa-6)):* part of this gradient is calendar truncation — late-delivered customers had fewer days left to reorder before the data ends. A fixed 21-day-after-delivery window puts the **causal penalty at ~24% lower reorder likelihood, ≈1,000 lost reorders**. Still material, about half the naive read.
 
 ---
 
@@ -143,11 +143,11 @@ Reorder rate falls monotonically with the delay on the *first* bottle order: **1
 <a id="q1-41"></a>
 ### 4.1 Retention & reorders *(code: analysis.ipynb §3.10, §3.12)*
 
-Of **53,738 identifiable campaign bottle buyers**:
+Of **54,127 identifiable campaign bottle buyers**:
 
-- **10.1% (5,417) re-purchased syrup by May 31** (window: 4–6 weeks); median time to reorder **23 days** — consistent with a ~3-week consumption cycle for the bundled 10er pods. *(code: analysis.ipynb §3.10)*
-- What they reordered: **3er pod bundles 3,989 · bottles 2,014 · 10er pods 1,924** (overlapping). The May 12 3er launch was well-timed against the consumption cycle and immediately became the main reorder vehicle (3,374 orders on day one). *(code: analysis.ipynb §3.10, §3.12)*
-- 3er bundle buyers since May 12: 10,236 orders, only **9.3% first-time customers**, and **42.4% verifiably owned a bottle already** — it is functioning as a retention product, as intended. (The other ~58% may have bought bottles before Apr 1, via another channel, or are gift buyers — worth checking, and one of my interviewer questions.) *(code: analysis.ipynb §3.12)*
+- **10.1% (5,470) re-purchased syrup by May 31** (window: 4–6 weeks); median time to reorder **23 days** — consistent with a ~3-week consumption cycle for the bundled 10er pods. *(code: analysis.ipynb §3.10)*
+- What they reordered: **3er pod bundles 3,992 · bottles 2,072 · 10er pods 1,978** (overlapping). The May 12 3er launch was well-timed against the consumption cycle and immediately became the main reorder vehicle (3,365 orders on day one). *(code: analysis.ipynb §3.10, §3.12)*
+- 3er bundle buyers since May 12: 10,215 orders, only **9.4% first-time customers**, and **42.4% verifiably owned a bottle already** — it is functioning as a retention product, as intended. (The other ~58% may have bought bottles before Apr 1, via another channel, or are gift buyers — worth checking, and one of my interviewer questions.) *(code: analysis.ipynb §3.12)*
 - Reorder flavour ranking (Peach, Cola Ice Pop, Green Apple on top) is the first read on which refill flavours to scale. *(code: analysis.ipynb §3.12)*
 
 <a id="q1-42"></a>
@@ -155,8 +155,8 @@ Of **53,738 identifiable campaign bottle buyers**:
 
 **No evidence of cannibalisation so far — if anything the opposite:**
 
-- Energy absolute revenue per day *rose* pre → post (+36%). *(code: analysis.ipynb §3.5)*
-- Cohort comparison: existing customers who bought a bottle grew their energy spend/day **+74%** pre→post, vs **+52%** for existing campaign customers who didn't buy a bottle. *(code: analysis.ipynb §3.11)*
+- Energy absolute net revenue per day *rose* pre → post (+36%). *(code: analysis.ipynb §3.5)*
+- Cohort comparison: existing customers who bought a bottle grew their energy spend/day **+73%** pre→post, vs **+51%** for existing campaign customers who didn't buy a bottle. *(code: analysis.ipynb §3.11)*
 
 **Interpretation with caveats:** syrup looks complementary (different consumption occasion) rather than substitutive. But the post window is short, seasonal, and boosted by other launches; the honest verdict is "no early warning signs", to be re-checked on a 90-day horizon — the real risk is *share-of-stomach* over months, not weeks.
 
@@ -166,7 +166,7 @@ Of **53,738 identifiable campaign bottle buyers**:
 **Worked:** launch-day activation of the base (28% of campaign volume in one day); bundle architecture (100% pods attach = every bottle owner starts the refill loop); the May 12 3er bundle timed to the refill cycle; a durable post-campaign syrup baseline (~14% of revenue).
 
 **Needs improvement:**
-1. **Fulfilment readiness** — the production gap measurably burned early retention (~1,000 reorders on the corrected estimate, [§5.6](#q1-56)) and it was POZ1-specific ([§5.4](#q1-54)); late-campaign buyers had a first experience of waiting 5+ weeks.
+1. **Fulfilment readiness** — the production gap measurably burned early retention (~1,000 reorders on the corrected estimate, [further analysis §6](further-analysis.md#fa-6)) and it was POZ1-specific ([further analysis §4](further-analysis.md#fa-4)); late-campaign buyers had a first experience of waiting 5+ weeks.
 2. **FR performance** — 55% uplift vs DE's 191%; diagnose localisation/creator mix before H2.
 3. **New-customer angle** — syrup didn't acquire; consider a syrup-led acquisition offer now that the base is saturated with bottles.
 
@@ -181,35 +181,7 @@ Of **53,738 identifiable campaign bottle buyers**:
 
 ## 5. Further analysis — beyond the brief's guiding questions
 
-Seven analyses the case didn't ask for but that sharpen — and in one case honestly **revise** — the findings above.
-
-<a id="q1-51"></a>
-### 5.1 Refunds & cancellations *(code: analysis.ipynb §6.1)*
-Refund incidence is tiny (~0.4% of campaign orders) and does **not** rise with delivery delay; cancellations are 2.7× higher for bottle orders (0.9% vs 0.3%) but still small. **The production gap's cost was retention, not immediate revenue give-back** — no product-quality red flag in refunds for a first-ever product.
-
-<a id="q1-52"></a>
-### 5.2 The May 18 sampling giveaway barely converted *(code: analysis.ipynb §6.2)*
-The 5.4k new customers who received free samples on May 18 converted to a **paid order within 13 days at just 0.37%**, vs **4.8%** repeat-paid for organically acquired new customers in a matched window — ~13× worse. Short-term, the giveaway generated traffic, not customers. *(Caveat: 13 days is short; the leads may still monetise via CRM.)*
-
-<a id="q1-53"></a>
-### 5.3 Campaign-acquired new customers are weaker, not stronger *(code: analysis.ipynb §6.3)*
-Fixed 21-day repeat window: campaign new customers **with** a bottle repeat at **4.5%**, vs 8.5% for campaign new customers without one and 9.3% for pre-period new customers. Even accounting for the ~23-day syrup refill cycle and the delivery delays, this further weakens syrup as an acquisition tool: it pulled few new customers (§2.2) and the ones it pulled repeat less — consistent with hype/gift buyers.
-
-<a id="q1-54"></a>
-### 5.4 The production gap was a single-warehouse problem *(code: analysis.ipynb §6.4)*
-Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix (and consider cross-shipping from NOT1 during launches).
-
-<a id="q1-55"></a>
-### 5.5 The launch re-activated dormant customers — and they stayed active *(code: analysis.ipynb §6.5)*
-Existing customers who bought a bottle nearly **doubled their total spend/day post-campaign (+88%)** while the matched control group *declined* (−5%). Notably, the bottle cohort was **less active pre-campaign** despite being larger — the launch pulled dormant fans back, and they kept ordering. *(Interpretation caveat: part of the lift is syrup refills themselves plus regression to the mean; a matched-activity control would isolate the pure habit effect.)*
-
-<a id="q1-56"></a>
-### 5.6 Honest revision: the true delay penalty is smaller than the raw gradient *(code: analysis.ipynb §6.6)*
-The 14.5% → 5.4% gradient in §3.3 partly reflects **calendar truncation** (late-delivered customers had fewer days left to reorder before the data ends). Giving every customer the same **21-day clock starting at delivery** (deliveries ≤ May 10 only), the rates become **9.8% (0–4d) vs ~7.1–8.0% (delayed)** — a **~25% relative penalty**, or roughly **~1,000 lost reorders rather than the naive ~2,400**. The delay effect is real and material, but about half the naive estimate. TL;DR #4 and [§3.3](#q1-33) should be read with this correction.
-
-<a id="q1-57"></a>
-### 5.7 A refill-demand planning number *(code: analysis.ipynb §6.7)*
-From well-served owners' steady-state behaviour: **per 1,000 bottle owners, expect ~140 refill orders (~500 pod packs) per month**. First-month estimate from the launch cohort — refine with June+ data — but it's the number production planning lacked when the gap happened.
+Seven additional analyses that sharpen — and in one case revise — the findings above are documented separately in **[further-analysis.md](further-analysis.md)**: refunds & cancellations, the May 18 sampling giveaway's conversion, new-customer cohort quality, the warehouse split of the delivery delays, the habit-formation effect, the truncation-corrected delay estimate (which cut the lost-reorders figure from ~2,400 to ~1,000), and a refill-demand planning number. *(code: analysis.ipynb §6)*
 
 ---
 

@@ -11,6 +11,7 @@
 | **[project-plan-blueprint.md](project-plan-blueprint.md)** | This document — the plan, method, and decision log |
 | **[data-quality-review.md](data-quality-review.md)** | Full audit of the 4 CSVs: verified errors, anomalies, cleaning rules applied, and the top 10 questions for the interviewer |
 | **[q1-campaign-analysis.md](q1-campaign-analysis.md)** | Question 1 — Syrup Campaign analysis, written as a briefing for the Head of Marketing (KPIs, uplift, adoption, delays, retention, cannibalisation, recommendations) |
+| **[further-analysis.md](further-analysis.md)** | Seven analyses beyond the brief: refunds/cancellations, sampling conversion, cohort quality, warehouse split, habit effect, corrected delay estimate, refill forecast |
 | **[q2-h2-budget-plan.md](q2-h2-budget-plan.md)** | Question 2 — €35M H2 budget allocation, incrementality testing roadmap, and strategic reflection on the MMM memo + attribution data |
 | **[charts/](../charts/)** | Four PNG charts referenced by the Q1 write-up |
 | **analysis.ipynb** | The executable analysis: data audit (§1), cleaning rules (§2), every Q1 computation (§3), chart generation (§4), Q2 memo extraction & budget arithmetic (§5), further analyses beyond the brief (§6) — the .md files link into its sections |
@@ -29,7 +30,7 @@ Scripted checks in Python/pandas across all files: uniqueness, referential integ
 **Output:** `data-quality-review.md`. The audit also produced the **cleaning rules** used downstream (dedupe, orphan removal, cancelled-order definition, "use gross revenue", "compute delivery delay manually").
 
 Key catches that shaped the analysis:
-- `net_revenue` is unreliable (definition flips for ~11% of orders; 5.5K negative item rows) → all analysis uses **gross**.
+- `net_revenue` initially looked unreliable (shipping/refund components) → the audit phase used **gross**. *Later the data owner confirmed `net = item gross + shipping − refunds − tax` and asked for net as the steering metric — the final analysis runs on **net**.*
 - `shipments` has re-shipment duplicates and a broken `is_on_time` → delay computed as first `delivered_at − order_date`.
 - Two post-campaign business events (May 18 sampling giveaway, May 27 Summer Cocktail launch) contaminate the post-period → called out wherever post-period numbers are used.
 
@@ -40,7 +41,7 @@ Design decisions, then scripted analysis:
 |---|---|---|
 | Comparison windows | Pre Apr 1–18 · Campaign Apr 19–May 4 · Post May 5–31 | Only pre-period available as baseline (first-ever product; dataset starts Apr 1) |
 | Baseline metric | Per-day averages (windows have unequal lengths) | Comparability |
-| Money metric | Gross revenue, ratios/relative deltas | Net unreliable; brief says don't trust absolutes |
+| Money metric | **Net revenue** (data-owner guidance), ratios/relative deltas | Audit phase used gross (net looked unreliable); switched to net once the data owner confirmed the definition and asked for it |
 | Syrup scope | Bottles `10-00-42-0001-*`, 10er pods `11-00-43-0001`, 3er `11-00-43-0002%` as reorders (per brief) | Brief definition; mystery SKU `10-00-42-0020` flagged but excluded pending clarification |
 | Retention cohort | Campaign bottle buyers with a `customer_id`, first bottle order per customer, any later syrup purchase counts | Cleanest observable definition given identity gaps |
 | Delay impact | Reorder rate by delivery-delay bucket of the first bottle order | Direct read of the production-gap question; time-truncation caveat stated |
@@ -59,10 +60,13 @@ Four charts, built per the dataviz method (form chosen by the data's job, single
 5. Wrote the strategic reflection: assumptions with confidence levels, 9 flagged data oddities and how each was handled, 10 missing-context asks.
 
 ### Phase 5 — Further analyses (beyond the brief)
-Seven additional analyses (analysis.ipynb §6, write-up §5 of the Q1 briefing): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
+Seven additional analyses (analysis.ipynb §6, written up in `docs/further-analysis.md`): refunds/cancellations, May 18 sampling conversion, new-customer cohort quality, warehouse split of the delays, habit-formation effect, a truncation-corrected delay-retention estimate (which **revised the headline lost-reorders figure from ~2,400 to ~1,000**), and a refill-demand planning number.
 
 ### Phase 6 — Write-ups
 Each deliverable written for its audience: Q1 as a marketing-leadership briefing (findings first, method in footnotes), Q2 as a planning document (logic per line item), data review as an engineering-style audit (issue → evidence → handling → question).
+
+### Phase 7 — Data-owner answers incorporated
+Three audit questions were answered (net-revenue formula; cancellation = `refunded_value ≥ gross_revenue`; `10-00-42-002x` = syrup spare parts). The full pipeline was re-run under the confirmed rules: every headline conclusion held (shifts ≤ 0.2pp), and one further-analysis finding flipped — bottle orders almost never *cancel* (0.02%), confirming the "cancelled" shipment rows were replacement re-shipments. On the data owner's follow-up guidance the money metric was switched from gross to **net revenue** — all conclusions unchanged; one nuance surfaced (standard-VAT bottle hardware weighs slightly less vs food-VAT consumables in net terms).
 
 ---
 
@@ -92,4 +96,5 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 | Q2 desk analysis | ~45 min |
 | Further analyses | ~1 h |
 | Write-ups | ~1.5 h |
-| **Total** | **~6 h** (tool-assisted, fully scripted) |
+| Data-owner follow-up re-run | ~30 min |
+| **Total** | **~6.5 h** (tool-assisted, fully scripted) |
