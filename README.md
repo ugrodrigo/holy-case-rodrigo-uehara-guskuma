@@ -32,9 +32,19 @@ Solution to the two-part HOLY case study: **Q1 — 5th BURRsday Syrup Campaign l
 ## Reproducibility
 
 - Everything numeric is computed in [analysis.ipynb](analysis.ipynb) (Python/pandas) — no spreadsheet hand-edits. The notebook is committed with outputs, so it can be read on GitHub without running anything.
+- To re-run it (Python 3.12):
+
+  ```bash
+  pip install -r requirements.txt
+  jupyter lab analysis.ipynb   # run cells top to bottom; reads the CSVs from case-study-dataset/
+  ```
 - Data prep applied throughout (details in the [data quality review](docs/data-quality-review.md)): duplicate orders deduped · orphan line items dropped · cancelled orders excluded per the confirmed rule `refunded_value ≥ gross_revenue` · `10-00-42-002x` spare-part SKUs excluded · **net revenue** as the money metric (per the confirmed definition: item gross + shipping − refunds − tax) · delivery delay computed as `delivered_at − order_date`.
 - Per the dataset's own disclaimer, absolute numbers are anonymised — conclusions are stated as ratios, shares and relative comparisons.
 
 ## Time spent
 
 ~7 hours end-to-end (tool-assisted, fully scripted): ~5h on Q1 incl. audit, charts and further analyses, ~1.5h on Q2, plus the re-run under Martijn's confirmed definitions and an adversarial self-review. Full time log in the [project blueprint](docs/project-plan-blueprint.md).
+
+## License
+
+The analysis code and write-ups are [MIT-licensed](LICENSE). The case brief, CMO memo and dataset under [case-materials/](case-materials/) and [case-study-dataset/](case-study-dataset/) were provided by HOLY as case-study inputs, remain the property of their owners, and are **not** covered by the license — they are included solely for review of this solution.
