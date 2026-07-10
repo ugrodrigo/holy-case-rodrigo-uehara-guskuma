@@ -8,7 +8,7 @@ Under the cancellation rule provided by Martijn (full refund), **bottle orders a
 
 <a id="fa-2"></a>
 ## 2. The May 18 sampling giveaway barely converted *(code: analysis.ipynb §6.2)*
-The 5.4k new customers who received free samples on May 18 converted to a **paid order within 13 days at just 0.37%**, vs **4.8%** repeat-paid for organically acquired new customers in a matched window — ~13× worse. Short-term, the giveaway generated traffic, not customers. *(Caveat: 13 days is short; the leads may still monetise via CRM.)*
+The 5.4k new customers who received free samples on May 18 converted to a **paid order within 13 days at just 0.37%**, vs **4.8%** repeat-paid for organically acquired new customers in a matched window. The two cohorts sit at different funnel stages (a free-sample taker vs. someone who already paid), so the ~13× gap overstates the verdict — but near-zero immediate conversion still means the giveaway must be judged as **lead generation** (i.e., on the CRM follow-up to those 5.4k contacts), not as a sales driver. *(Caveat: 13 days is short.)*
 
 <a id="fa-3"></a>
 ## 3. Campaign-acquired new customers are weaker, not stronger *(code: analysis.ipynb §6.3)*
@@ -16,7 +16,7 @@ Fixed 21-day repeat window: campaign new customers **with** a bottle repeat at *
 
 <a id="fa-4"></a>
 ## 4. The production gap was a single-warehouse problem *(code: analysis.ipynb §6.4)*
-Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix (and consider cross-shipping from NOT1 during launches).
+Bottle orders fulfilled from **POZ1 took a median 8 days (mean 13)**; **NOT1 shipped bottles in ~4 days throughout** — same as its normal service. The ops recommendation sharpens from "fix production planning" to a POZ1-specific stock-allocation fix. Before relying on cross-shipping from NOT1 in future launches, verify that its clean record reflects spare capacity rather than simply the UK's lower volume.
 
 <a id="fa-5"></a>
 ## 5. The launch re-activated dormant customers — and they stayed active *(code: analysis.ipynb §6.5)*
@@ -24,7 +24,7 @@ Existing customers who bought a bottle nearly **doubled their total net spend/da
 
 <a id="fa-6"></a>
 ## 6. Honest revision: the true delay penalty is smaller than the raw gradient *(code: analysis.ipynb §6.6)*
-The 14.6% → 5.4% gradient in the Q1 briefing §3.3 partly reflects **calendar truncation** (late-delivered customers had fewer days left to reorder before the data ends). Giving every customer the same **21-day clock starting at delivery** (deliveries ≤ May 10 only), the rates become **9.9% (0–4d) vs ~7.1–8.0% (delayed)** — a **~24% relative penalty**, or roughly **~1,000 lost reorders rather than the naive ~2,400**. The delay effect is real and material, but about half the naive estimate. The Q1 briefing's TL;DR #4 and §3.3 are stated with this correction applied.
+The 14.6% → 5.4% gradient in the Q1 briefing §3.3 partly reflects **calendar truncation** (late-delivered customers had fewer days left to reorder before the data ends). Giving every customer the same **21-day clock starting at delivery** (deliveries ≤ May 10 only), the rates become **9.9% (0–4d) vs ~7.1–8.0% (delayed)** — a **~24% relative penalty**, or roughly **~1,000 lost reorders rather than the naive ~2,400**. Two honesty notes: the corrected gradient is **not monotonic** — the >14d bucket (which, restricted to deliveries by May 10, contains the most enthusiastic early launch buyers) sits at 8.0%, *above* the 8–14d bucket — so composition effects remain, and the penalty is best read as **"roughly a fifth to a quarter", not a point estimate**. The delay effect is real and material, but about half the naive read and imprecisely sized. The Q1 briefing's TL;DR #4 and §3.3 are stated with this correction applied.
 
 <a id="fa-7"></a>
 ## 7. A refill-demand planning number *(code: analysis.ipynb §6.7)*

@@ -68,6 +68,9 @@ Each deliverable written for its audience: Q1 as a marketing-leadership briefing
 ### Phase 7 — Additional info from Martijn incorporated
 Three audit questions were answered (net-revenue formula; cancellation = `refunded_value ≥ gross_revenue`; `10-00-42-002x` = syrup spare parts). The full pipeline was re-run under the confirmed rules: every headline conclusion held (shifts ≤ 0.2pp), and one further-analysis finding flipped — bottle orders almost never *cancel* (0.02%), confirming the "cancelled" shipment rows were replacement re-shipments. On Martijn's follow-up guidance the money metric was switched from gross to **net revenue** — all conclusions unchanged; one nuance surfaced (standard-VAT bottle hardware weighs slightly less vs food-VAT consumables in net terms).
 
+### Phase 8 — Adversarial self-review
+Red-teamed the finished deliverables as a reviewer would: calendar effects on the baseline (Easter, May 1), definitional attach rates, selection bias in the cohort contrasts, a non-monotonic corrected delay gradient, zero-revenue order contamination, and `is_first_order` reliability. Added sensitivity checks and an internal retention benchmark (energy 11.8% vs syrup 10.1% — analysis.ipynb §3.1, §3.10) and tightened the causal language throughout.
+
 ---
 
 ## 3. Principles followed
@@ -97,4 +100,5 @@ Three audit questions were answered (net-revenue formula; cancellation = `refund
 | Further analyses | ~1 h |
 | Write-ups | ~1.5 h |
 | Re-run with Martijn's additional info | ~30 min |
-| **Total** | **~6.5 h** (tool-assisted, fully scripted) |
+| Adversarial self-review & fixes | ~30 min |
+| **Total** | **~7 h** (tool-assisted, fully scripted) |

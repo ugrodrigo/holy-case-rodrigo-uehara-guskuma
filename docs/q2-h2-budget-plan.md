@@ -21,7 +21,7 @@ I therefore treat the €35M as a hard constraint (growth/share-taking mandate, 
 1. **Rank by marginal ROI (mROI), not average iROAS** — iROAS rewards history; mROI prices the next euro. Ranking: Google 4.46 > Affiliate 1.78 > Paid Social 1.50 (TikTok 1.35 / META 0.99) > Brand 0.44 ≈ Influencer 0.40.
 2. **Scale the small high-mROI channels first** (Google, Affiliate) — but capped, because the memo itself flags their numbers as attribution-assisted; scaling is gated by incrementality tests.
 3. **Paid Social takes the largest share**, tilted to TikTok early and META for depth — accepting that both saturate below mROI 1 at this budget.
-4. **Influencer is restructured, not just cut.** The MMM says the *mix* is the problem (YouTube Inf. 0.30 vs Podcast 0.71 / TikTok Inf. 0.76). Because €31M must be deployed, Influencer keeps a substantial envelope, shifted toward the high-mROI platforms as far as contract floors allow.
+4. **Influencer is restructured, not just cut.** The MMM says the *mix* is the problem (YouTube Inf. 0.30 vs Podcast 0.71 / TikTok Inf. 0.76). Because €31M must be deployed, Influencer keeps a substantial envelope, shifted toward the high-mROI platforms as far as contract floors allow. Why not cut it to the contractual floor and hold a bigger reserve instead? Paid Social is already deep into saturation at its €17M envelope (the memo shows mROI < 1 at far smaller increases), the reserve is sized to what Q4 can actually deploy well, and the floors (memo limitation #3) commit much of the influencer spend regardless — the controllable lever is the *mix*, which this plan shifts hard.
 5. **Hold a testing & flex reserve** — with model holdout R² of 0.29, buying information is worth more than the last saturated media euro. The reserve deploys in Q4 into whatever the Q3 tests validate.
 6. **Phase Q3 < Q4** (≈ 40/60): H2 contains Black Week + Christmas; saturation ceilings are higher when demand is elevated.
 
@@ -60,6 +60,10 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 | Performance | €12.0M | €19.0M | Black Week + Christmas raise saturation ceilings; Q3 runs the tests that de-risk Q4 |
 | Brand | €2.2M | €1.8M | TV lock + events season in Q3; Q4 brand supports peak trading |
 | **Total** | **€14.2M** | **€20.8M** | |
+
+### 1.5 Why this plan carries no point revenue projection
+
+Deliberately. The model's holdout R² is 0.29 and €35M is ~2.2× beyond the spend range it was fitted on — any point forecast would be false precision. Directional bounds only: the outcome should not sit *below* the memo's €57M projection (media effects are constrained non-negative, and we spend strictly more), while a naive linear extrapolation of the memo's plan (€70M+) is an upper bound that saturation guarantees we will not reach. The honest deliverable is the ranking, the phasing and the tests — the Q3 experiments in Task 2 are what turn this allocation into a defensible Q4 forecast.
 
 ---
 
