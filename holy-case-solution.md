@@ -1,9 +1,9 @@
 # HOLY Marketing Analyst Case — Full Solution
 
-*Rodrigo Uehara Guskuma · July 2026*
+*[Rodrigo Uehara Guskuma](https://www.linkedin.com/in/rodrigo-guskuma/) · July 2026*
 
 **Code:** all computations behind this document live in `analysis.ipynb`, rendered with outputs on GitHub:
-https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb
+[https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis.ipynb)
 — the *(code: analysis.ipynb §…)* tags throughout name the notebook section that computes each number.
 
 | Contents | |
