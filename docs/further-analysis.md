@@ -4,7 +4,7 @@
 
 <a id="fa-1"></a>
 ## 1. Refunds & cancellations *(code: analysis.ipynb §6.1)*
-Under the data owner's cancellation rule (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
+Under the cancellation rule provided by Martijn (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
 
 <a id="fa-2"></a>
 ## 2. The May 18 sampling giveaway barely converted *(code: analysis.ipynb §6.2)*

@@ -12,16 +12,16 @@ https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/analysis
 | [Part 2 — Q2: H2 2026 budget, testing roadmap & strategic reflection](#part-2) | Based on the MMM memo + attribution data |
 | [Appendix A — Further analysis beyond the brief](#appendix-a) | Seven additional analyses |
 | [Appendix B — Method & project blueprint](#appendix-b) | Link to the full decision log |
-| [Appendix C — Data quality review](#appendix-c) | Link to the full audit & data-owner answers |
+| [Appendix C — Data quality review](#appendix-c) | Link to the full audit & additional info provided by Martijn |
 
 ---
 
 <a id="part-1"></a>
 # Part 1 — Q1: 5th BURRsday Syrup Campaign — Launch Analysis
 
-*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are **net revenue** (the data owner's steering metric: item revenue + shipping − refunds − tax) and should be read as **relative** comparisons, per the dataset disclaimer.*
+*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are **net revenue** (the marketing team's steering metric — additional info provided by Martijn: item revenue + shipping − refunds − tax) and should be read as **relative** comparisons, per the dataset disclaimer.*
 
-> **Data prep:** duplicate orders deduped, cancelled orders excluded (data-owner rule: `refunded_value ≥ gross_revenue`), orphan line items and `10-00-42-002x` spare-part items dropped, delivery delay computed as `delivered_at − order_date`. Details, open questions and the data owner's answers in [Appendix C — Data Quality Review](#appendix-c).
+> **Data prep:** duplicate orders deduped, cancelled orders excluded (rule provided by Martijn: `refunded_value ≥ gross_revenue`), orphan line items and `10-00-42-002x` spare-part items dropped, delivery delay computed as `delivered_at − order_date`. Details, open questions and the additional info provided by Martijn in [Appendix C — Data Quality Review](#appendix-c).
 >
 > **Code:** every number in this document is produced by **analysis.ipynb** (in the repository, rendered with outputs on GitHub). Each section below carries a *(code: analysis.ipynb §…)* tag naming the analysis.ipynb section that computes it; the data-cleaning rules are in analysis.ipynb §2.
 
@@ -349,7 +349,7 @@ Allocated by the L2 iROAS ranking, with the memo's caveat that the 8-week window
 
 <a id="fa-1"></a>
 ## 1. Refunds & cancellations *(code: analysis.ipynb §6.1)*
-Under the data owner's cancellation rule (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
+Under the cancellation rule provided by Martijn (full refund), **bottle orders almost never cancelled: 0.02% vs 0.36%** for non-bottle orders — despite 5-week waits, customers kept their orders. Partial refunds are more common on bottle orders (1.3% vs 0.3%), consistent with goodwill/shipping credits on delayed orders, and refund incidence does **not** rise with delay (0.2–0.5% across delay buckets). **The production gap's cost was retention, not immediate revenue give-back.** *Note: this finding flipped direction once the refund-based cancellation rule replaced the earlier shipment-status proxy — the "cancelled" shipment rows on bottle orders were replacement re-shipments, not customer cancellations.*
 
 <a id="fa-2"></a>
 ## 2. The May 18 sampling giveaway barely converted *(code: analysis.ipynb §6.2)*
@@ -393,6 +393,6 @@ known limitations and the time log (~6.5 h) — is documented in
 
 The dataset audit — issue-by-issue findings, the cleaning rules applied to every number in this document
 (dedupe · drop orphans · cancelled = `refunded_value ≥ gross` · spare-part SKUs excluded · net revenue as the
-money metric), and the questions asked of the data owner with **the answers received** (revenue definitions,
+money metric), and the **additional info provided by Martijn** (revenue definitions,
 cancellation rule, spare-part SKUs) — is documented in
 **[docs/data-quality-review.md](https://github.com/ugrodrigo/holy-case-rodrigo-uehara-guskuma/blob/main/docs/data-quality-review.md)** (code: analysis.ipynb §1–2).

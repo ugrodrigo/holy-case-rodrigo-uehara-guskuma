@@ -1,8 +1,8 @@
 # Q1 — 5th BURRsday Syrup Campaign: Launch Analysis
 
-*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are **net revenue** (the data owner's steering metric: item revenue + shipping − refunds − tax) and should be read as **relative** comparisons, per the dataset disclaimer.*
+*Briefing for the Head of Marketing · Data: Apr 1 – May 31, 2026 (DE/FR/UK Shopify) · All monetary figures are **net revenue** (the marketing team's steering metric — additional info provided by Martijn: item revenue + shipping − refunds − tax) and should be read as **relative** comparisons, per the dataset disclaimer.*
 
-> **Data prep:** duplicate orders deduped, cancelled orders excluded (data-owner rule: `refunded_value ≥ gross_revenue`), orphan line items and `10-00-42-002x` spare-part items dropped, delivery delay computed as `delivered_at − order_date`. Details, open questions and the data owner's answers in [data-quality-review.md](data-quality-review.md).
+> **Data prep:** duplicate orders deduped, cancelled orders excluded (rule provided by Martijn: `refunded_value ≥ gross_revenue`), orphan line items and `10-00-42-002x` spare-part items dropped, delivery delay computed as `delivered_at − order_date`. Details, open questions and the additional info provided by Martijn in [data-quality-review.md](data-quality-review.md).
 >
 > **Code:** every number in this document is produced by **analysis.ipynb** (in the repository, rendered with outputs on GitHub). Each section below carries a *(code: analysis.ipynb §…)* tag naming the analysis.ipynb section that computes it; the data-cleaning rules are in analysis.ipynb §2.
 
